@@ -1251,6 +1251,7 @@ html, body {
   width: 72%;
   max-width: 320px;
   margin: 0 auto;
+  min-height: 380px;
 }
 
 .carousel-header {
@@ -1279,6 +1280,8 @@ html, body {
   align-items: flex-start;
   touch-action: pan-y;
   user-select: none;
+  height: 300px;
+  overflow: hidden;
 }
 
 .carousel-slide {
