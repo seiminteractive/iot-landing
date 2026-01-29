@@ -326,33 +326,32 @@
         </div>
 
         <!-- Mobile Accordion -->
-        <div class="mobile-use-cases-accordion">
-          <div 
+        <Accordion type="single" collapsible class="mobile-use-cases-accordion" default-value="item-0">
+          <AccordionItem 
             v-for="(useCase, index) in useCases" 
             :key="index"
+            :value="`item-${index}`"
             class="accordion-item"
             :class="{ 'active': activeUseCaseIndex === index }"
+            @update:open="(open) => { if (open) activeUseCaseIndex = index }"
           >
-            <button 
-              class="accordion-header"
-              @click="toggleUseCase(index)"
-            >
+            <AccordionTrigger class="accordion-header">
               <div class="accordion-header-left">
                 <span class="accordion-number">0{{ index + 1 }}</span>
                 <i :class="['pi', useCase.icon, 'accordion-icon']"></i>
                 <span class="accordion-title">{{ useCase.title }}</span>
               </div>
               <div class="accordion-toggle">
-                <i class="pi" :class="activeUseCaseIndex === index ? 'pi-minus' : 'pi-plus'"></i>
+                <i class="pi pi-plus"></i>
               </div>
-            </button>
-            <div class="accordion-content" :class="{ 'is-open': activeUseCaseIndex === index }">
+            </AccordionTrigger>
+            <AccordionContent class="accordion-content">
               <div class="accordion-content-inner">
                 <p class="accordion-description">{{ useCase.description }}</p>
               </div>
-            </div>
-          </div>
-        </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </section>
 
@@ -557,6 +556,12 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import Navbar from './components/Navbar.vue'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 const services = [
   {
@@ -1798,30 +1803,44 @@ html, body {
   margin: 0 auto;
 }
 
+/* Global reset for accordion */
+.mobile-use-cases-accordion * {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 .accordion-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
 .accordion-item:first-child {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
+/* The button trigger */
 .accordion-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 20px 0;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 28px 0 !important;
+  cursor: pointer !important;
+  border: none !important;
+  outline: none !important;
 }
 
+.accordion-header:hover {
+  text-decoration: none !important;
+}
+
+/* Left side: number + icon + title */
 .accordion-header-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 14px !important;
 }
 
 .accordion-number {
@@ -1838,7 +1857,7 @@ html, body {
   transition: all 0.3s ease;
 }
 
-.accordion-item.active .accordion-icon {
+.accordion-item[data-state="open"] .accordion-icon {
   color: rgba(255, 200, 120, 0.8);
 }
 
@@ -1850,57 +1869,41 @@ html, body {
   text-align: left;
 }
 
-.accordion-item.active .accordion-title {
+.accordion-item[data-state="open"] .accordion-title {
   color: rgba(255, 255, 255, 0.95);
 }
 
+/* Right side: toggle button */
 .accordion-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.04);
-  transition: all 0.3s ease;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  transition: all 0.3s ease !important;
+  flex-shrink: 0 !important;
 }
 
-.accordion-toggle i {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.4);
-  transition: all 0.3s ease;
+.accordion-toggle .pi {
+  font-size: 0.75rem;
 }
 
-.accordion-item.active .accordion-toggle {
-  background: rgba(255, 200, 120, 0.15);
+.accordion-item[data-state="open"] .accordion-toggle {
+  background: rgba(255, 200, 120, 0.15) !important;
+  color: rgba(255, 200, 120, 0.9) !important;
 }
 
-.accordion-item.active .accordion-toggle i {
-  color: rgba(255, 200, 120, 0.9);
-}
-
+/* AccordionContent */
 .accordion-content {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.accordion-content.is-open {
-  grid-template-rows: 1fr;
+  overflow: hidden;
 }
 
 .accordion-content-inner {
-  overflow: hidden;
-  padding: 0 0 0 34px;
-  opacity: 0;
-  transform: translateY(-8px);
-  transition: opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s, padding 0.4s ease;
-}
-
-.accordion-content.is-open .accordion-content-inner {
   padding: 0 0 20px 34px;
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .accordion-description {
@@ -2778,6 +2781,7 @@ html, body {
   .services-section {
     min-height: auto;
     padding: 80px 0 60px;
+    scroll-margin-top: 225px;
   }
   
   .desktop-services {

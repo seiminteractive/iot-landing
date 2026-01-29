@@ -100,7 +100,27 @@ const closeMenu = () => {
   justify-content: space-between;
   padding: 20px 60px;
   z-index: 100;
-  background: transparent;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 220, 150, 0.03) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px 0 rgba(255, 200, 120, 0.03);
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .logo {
