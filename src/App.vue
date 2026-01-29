@@ -35,14 +35,14 @@
 
     <!-- Services Section -->
     <section id="services" class="services-section">
-      <!-- Decorative Elements - Left Vertical -->
+      <!-- Decorative Elements - Left Vertical (Desktop only) -->
       <div class="deco-left">
         <span class="deco-text-vertical">SEIM</span>
         <div class="deco-line-vertical"></div>
       </div>
       
-      <!-- Content -->
-      <div class="services-content-wrapper">
+      <!-- Desktop Content -->
+      <div class="services-content-wrapper desktop-services">
         <!-- Left Side - Navigation -->
         <div class="services-nav">
           <div class="nav-header">
@@ -90,6 +90,53 @@
           ></span>
         </div>
       </div>
+
+      <!-- Mobile Carousel -->
+      <div class="mobile-services-carousel">
+        <div class="carousel-header">
+          <span class="carousel-label">SERVICIOS</span>
+          <span class="carousel-counter">{{ activeIndex + 1 }} / {{ services.length }}</span>
+        </div>
+        
+        <div 
+          class="carousel-track"
+          @touchstart="handleTouchStart"
+          @touchmove="handleTouchMove"
+          @touchend="handleTouchEnd"
+        >
+          <Transition :name="swipeDirection" mode="out-in">
+            <div :key="activeIndex" class="carousel-slide">
+              <h2 class="carousel-title">
+                {{ services[activeIndex].title }}
+              </h2>
+              <p class="carousel-description">
+                {{ services[activeIndex].mainDescription }}
+              </p>
+              <p class="carousel-secondary" v-if="services[activeIndex].secondaryDescription">
+                {{ services[activeIndex].secondaryDescription }}
+              </p>
+            </div>
+          </Transition>
+        </div>
+        
+        <!-- Swipe hint -->
+        <div class="carousel-hint">
+          <i class="pi pi-arrow-left"></i>
+          <span>Deslizá para ver más</span>
+          <i class="pi pi-arrow-right"></i>
+        </div>
+        
+        <!-- Dots -->
+        <div class="carousel-dots">
+          <span 
+            v-for="(_, index) in services" 
+            :key="index"
+            class="carousel-dot"
+            :class="{ 'active': activeIndex === index }"
+            @click="setActiveService(index)"
+          ></span>
+        </div>
+      </div>
     </section>
 
     <!-- Solution Section -->
@@ -99,7 +146,7 @@
 
       <div class="solution-container">
         <!-- Column 1 - Overview / Descripción -->
-        <div class="solution-column">
+        <div class="solution-column solution-column-left">
           <span class="solution-label">OVERVIEW</span>
           <h3 class="solution-column-title">La Solución</h3>
           <p class="solution-text">
@@ -186,7 +233,8 @@
           <p class="use-cases-subtitle">Soluciones diseñadas para resolver desafíos operativos reales.</p>
         </div>
 
-        <div class="use-cases-grid">
+        <!-- Desktop Grid -->
+        <div class="use-cases-grid desktop-use-cases">
           <!-- Card 1 -->
           <div class="use-case-card">
             <div class="card-border"></div>
@@ -273,6 +321,35 @@
               </div>
               <h3 class="card-title">Inteligencia Artificial Aplicada</h3>
               <p class="card-description">Insights automáticos para decisiones estratégicas.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Accordion -->
+        <div class="mobile-use-cases-accordion">
+          <div 
+            v-for="(useCase, index) in useCases" 
+            :key="index"
+            class="accordion-item"
+            :class="{ 'active': activeUseCaseIndex === index }"
+          >
+            <button 
+              class="accordion-header"
+              @click="toggleUseCase(index)"
+            >
+              <div class="accordion-header-left">
+                <span class="accordion-number">0{{ index + 1 }}</span>
+                <i :class="['pi', useCase.icon, 'accordion-icon']"></i>
+                <span class="accordion-title">{{ useCase.title }}</span>
+              </div>
+              <div class="accordion-toggle">
+                <i class="pi" :class="activeUseCaseIndex === index ? 'pi-minus' : 'pi-plus'"></i>
+              </div>
+            </button>
+            <div class="accordion-content" :class="{ 'is-open': activeUseCaseIndex === index }">
+              <div class="accordion-content-inner">
+                <p class="accordion-description">{{ useCase.description }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -459,7 +536,7 @@
           </div>
 
           <!-- Column 4 - Contacto -->
-          <div class="footer-column">
+          <div class="footer-column footer-contact-column">
             <h4 class="footer-title">CONTACTO</h4>
             <ul class="footer-links">
               <li><a href="https://wa.me/5493413551507" target="_blank">WhatsApp</a></li>
@@ -535,17 +612,102 @@ const setActiveService = (index) => {
 }
 
 const nextService = () => {
+  swipeDirection.value = 'slide-left'
   activeIndex.value = (activeIndex.value + 1) % services.length
 }
 
+const prevService = () => {
+  swipeDirection.value = 'slide-right'
+  activeIndex.value = (activeIndex.value - 1 + services.length) % services.length
+}
+
 const startAutoScroll = () => {
-  autoScrollInterval = setInterval(nextService, 4000)
+  autoScrollInterval = setInterval(nextService, 5000)
 }
 
 const resetAutoScroll = () => {
   if (autoScrollInterval) {
     clearInterval(autoScrollInterval)
   }
+  startAutoScroll()
+}
+
+// Touch/Swipe handling for mobile carousel
+const swipeDirection = ref('slide-left')
+let touchStartX = 0
+let touchEndX = 0
+
+// Use Cases data for mobile accordion
+const useCases = [
+  {
+    icon: 'pi-chart-line',
+    title: 'Monitoreo de Producción',
+    description: 'Visibilidad en tiempo real del estado de líneas y procesos productivos. Seguimiento continuo de métricas clave para tomar decisiones informadas.'
+  },
+  {
+    icon: 'pi-bolt',
+    title: 'Eficiencia Operativa',
+    description: 'Indicadores clave para optimizar el desempeño industrial. Identificación de cuellos de botella y oportunidades de mejora continua.'
+  },
+  {
+    icon: 'pi-clock',
+    title: 'Continuidad Operativa',
+    description: 'Supervisión constante para asegurar estabilidad y previsibilidad. Alertas tempranas y monitoreo 24/7 de variables críticas.'
+  },
+  {
+    icon: 'pi-wrench',
+    title: 'Mantenimiento Inteligente',
+    description: 'Anticipación de fallas basada en datos operativos. Reducción de paradas no planificadas y optimización de recursos de mantenimiento.'
+  },
+  {
+    icon: 'pi-globe',
+    title: 'Gestión Multi-Planta',
+    description: 'Control centralizado de múltiples plantas o líneas. Comparativas de rendimiento y estandarización de procesos entre ubicaciones.'
+  },
+  {
+    icon: 'pi-sparkles',
+    title: 'Inteligencia Artificial',
+    description: 'Insights automáticos para decisiones estratégicas. Análisis predictivo y detección de patrones en grandes volúmenes de datos.'
+  }
+]
+
+const activeUseCaseIndex = ref(null)
+
+const toggleUseCase = (index) => {
+  if (activeUseCaseIndex.value === index) {
+    activeUseCaseIndex.value = null
+  } else {
+    activeUseCaseIndex.value = index
+  }
+}
+
+const handleTouchStart = (e) => {
+  touchStartX = e.touches[0].clientX
+  // Pause auto-scroll while touching
+  if (autoScrollInterval) {
+    clearInterval(autoScrollInterval)
+  }
+}
+
+const handleTouchMove = (e) => {
+  touchEndX = e.touches[0].clientX
+}
+
+const handleTouchEnd = () => {
+  const swipeThreshold = 50
+  const diff = touchStartX - touchEndX
+  
+  if (Math.abs(diff) > swipeThreshold) {
+    if (diff > 0) {
+      // Swipe left - next
+      nextService()
+    } else {
+      // Swipe right - previous
+      prevService()
+    }
+  }
+  
+  // Resume auto-scroll
   startAutoScroll()
 }
 
@@ -1076,6 +1238,137 @@ html, body {
   transform: translateY(-20px);
 }
 
+/* ==================== MOBILE SERVICES CAROUSEL ==================== */
+.mobile-services-carousel {
+  display: none;
+  flex-direction: column;
+  padding: 0;
+  width: 72%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.carousel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.75rem;
+}
+
+.carousel-label {
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: rgba(255, 200, 120, 0.6);
+}
+
+.carousel-counter {
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: monospace;
+}
+
+.carousel-track {
+  display: flex;
+  align-items: flex-start;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.carousel-slide {
+  width: 100%;
+}
+
+.carousel-title {
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: #fff;
+  margin-bottom: 1.35rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.carousel-description {
+  font-size: 0.88rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1.1rem;
+}
+
+.carousel-secondary {
+  font-size: 0.82rem;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.carousel-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 1.75rem 0 1.1rem;
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.65rem;
+  font-weight: 300;
+}
+
+.carousel-hint i {
+  font-size: 0.55rem;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+  background: rgba(255, 200, 120, 0.7);
+  width: 18px;
+  border-radius: 3px;
+}
+
+/* Slide transitions */
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.35s ease;
+}
+
+.slide-left-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
 /* ==================== SOLUTION SECTION ==================== */
 .solution-section {
   position: relative;
@@ -1493,6 +1786,128 @@ html, body {
 .use-case-card:hover::before {
   opacity: 1;
   transform: scaleX(1);
+}
+
+/* ==================== MOBILE USE CASES ACCORDION ==================== */
+.mobile-use-cases-accordion {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.accordion-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.accordion-item:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.accordion-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.accordion-number {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.2);
+  font-family: monospace;
+  min-width: 20px;
+}
+
+.accordion-icon {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.accordion-item.active .accordion-icon {
+  color: rgba(255, 200, 120, 0.8);
+}
+
+.accordion-title {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.accordion-item.active .accordion-title {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.accordion-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  transition: all 0.3s ease;
+}
+
+.accordion-toggle i {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.accordion-item.active .accordion-toggle {
+  background: rgba(255, 200, 120, 0.15);
+}
+
+.accordion-item.active .accordion-toggle i {
+  color: rgba(255, 200, 120, 0.9);
+}
+
+.accordion-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.accordion-content.is-open {
+  grid-template-rows: 1fr;
+}
+
+.accordion-content-inner {
+  overflow: hidden;
+  padding: 0 0 0 34px;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.3s ease 0.05s, transform 0.3s ease 0.05s, padding 0.4s ease;
+}
+
+.accordion-content.is-open .accordion-content-inner {
+  padding: 0 0 20px 34px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.accordion-description {
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* ==================== TECHNOLOGY SECTION - TIMELINE ==================== */
@@ -2159,6 +2574,14 @@ html, body {
     padding: 80px 0;
   }
   
+  .tech-light-container {
+    top: 10%;
+    left: -30%;
+    width: 100vw;
+    height: 130vh;
+    opacity: 0.6;
+  }
+  
   .technology-container {
     padding: 0 30px;
   }
@@ -2261,6 +2684,15 @@ html, body {
     padding: 0 30px;
   }
   
+  /* Hide left column and first separator on mobile */
+  .solution-column-left {
+    display: none;
+  }
+  
+  .solution-separator:first-of-type {
+    display: none;
+  }
+  
   .solution-separator {
     width: 100%;
     height: 1px;
@@ -2297,53 +2729,97 @@ html, body {
 
 @media (max-width: 768px) {
   .hero {
-    padding-top: 80px;
+    padding-top: 100px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    align-items: flex-start;
+    padding-bottom: 100px;
   }
   
   .hero-content {
-    padding: 0 30px;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+    min-height: calc(100dvh - 200px);
   }
   
   .hero-title {
-    font-size: 36px;
-    margin-bottom: 30px;
+    font-size: clamp(32px, 10vw, 48px);
+    margin-bottom: 24px;
+    line-height: 1.15;
   }
   
   .announcement-button {
-    font-size: 9px;
-    padding: 10px 18px;
+    font-size: 10px;
+    padding: 12px 20px;
+    align-self: flex-start;
   }
   
-  .scroll-indicator,
+  .scroll-indicator {
+    bottom: 24px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+  
   .documentation-button {
-    bottom: 30px;
-    left: 30px;
-    right: 30px;
+    display: none;
   }
   
-  .service-title {
-    font-size: 1.75rem;
+  /* Adjust light for mobile */
+  .light-container {
+    width: 100vw;
+    right: -20%;
   }
   
-  .service-description {
-    font-size: 0.9rem;
+  /* Services mobile - Carousel */
+  .services-section {
+    min-height: auto;
+    padding: 80px 0 60px;
   }
   
-  /* Use Cases mobile */
-  .use-cases-grid {
-    grid-template-columns: 1fr;
+  .desktop-services {
+    display: none !important;
+  }
+  
+  .deco-left {
+    display: none;
+  }
+  
+  .mobile-services-carousel {
+    display: flex;
+  }
+  
+  /* Use Cases mobile - Accordion */
+  .desktop-use-cases {
+    display: none;
+  }
+  
+  .mobile-use-cases-accordion {
+    display: flex;
   }
   
   .use-cases-section {
     padding: 80px 0;
   }
   
-  .use-cases-header {
-    margin-bottom: 50px;
+  .use-cases-container {
+    padding: 0 24px;
   }
   
-  .use-case-card {
-    padding: 36px 24px;
+  .use-cases-header {
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  
+  .use-cases-title {
+    font-size: 1.6rem;
+  }
+  
+  .use-cases-subtitle {
+    font-size: 0.85rem;
   }
   
   /* Contact responsive */
@@ -2368,34 +2844,64 @@ html, body {
   }
   
   /* Footer responsive */
+  .main-footer {
+    padding: 60px 0 30px;
+  }
+  
   .footer-container {
-    padding: 0 30px;
+    padding: 0 24px;
   }
   
   .footer-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 24px 20px;
   }
   
   .footer-brand {
     grid-column: span 2;
     padding-right: 0;
+    margin-bottom: 16px;
+  }
+  
+  .footer-logo {
+    height: 14px;
+    max-width: 100px;
+  }
+  
+  .footer-about {
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+  
+  .footer-contact-column {
+    display: none;
+  }
+  
+  .footer-column {
+    padding: 0;
+  }
+  
+  .footer-title {
+    font-size: 0.6rem;
+    margin-bottom: 12px;
+  }
+  
+  .footer-links {
+    gap: 8px;
+  }
+  
+  .footer-links li a {
+    font-size: 0.8rem;
   }
   
   .footer-bottom {
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-}
-
-@media (max-width: 540px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
+    margin-top: 30px;
+    padding-top: 20px;
   }
   
-  .footer-brand {
-    grid-column: span 1;
+  .footer-copyright {
+    font-size: 0.7rem;
+    text-align: center;
   }
   
   .footer-legal {
