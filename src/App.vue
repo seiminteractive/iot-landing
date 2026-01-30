@@ -27,7 +27,7 @@
 
       <!-- Scroll indicator -->
       <button class="scroll-indicator">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <svg viewBox="0 0 24 24" fill="none">
           <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
@@ -2764,11 +2764,35 @@ html, body {
   }
   
   .scroll-indicator {
-    bottom: 24px;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+  bottom: 24px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.scroll-indicator:hover {
+  transform: translateX(-50%) translateY(4px);
+}
+
+.scroll-indicator svg {
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
   }
+  50% {
+    transform: translateX(-50%) translateY(8px);
+  }
+}
   
   .documentation-button {
     display: none;
