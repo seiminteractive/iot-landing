@@ -65,7 +65,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useNavbarAnimations } from '../composables/useNavbarAnimations'
+
+// Inicializar animaciones del navbar
+useNavbarAnimations()
 
 const menuOpen = ref(false)
 
@@ -134,6 +138,8 @@ const closeMenu = () => {
   width: auto;
   display: block;
   opacity: 0.9;
+  will-change: transform, opacity;
+  cursor: pointer;
 }
 
 .nav {
@@ -150,9 +156,11 @@ const closeMenu = () => {
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.5px;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.2s ease;
   position: relative;
   text-transform: uppercase;
+  will-change: color, transform;
+  cursor: pointer;
 }
 
 .nav-link:hover {
@@ -173,12 +181,10 @@ const closeMenu = () => {
   transition: all 0.3s ease;
   white-space: nowrap;
   text-decoration: none;
+  will-change: transform, box-shadow, border-color;
 }
 
 .cta-button:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.35);
-  color: rgba(255, 255, 255, 1);
 }
 
 /* Menu Toggle Button - Sin recuadro */
@@ -203,6 +209,7 @@ const closeMenu = () => {
   background: rgba(255, 255, 255, 0.85);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center;
+  will-change: background, transform;
 }
 
 .menu-toggle.active .menu-line:first-child {
@@ -323,6 +330,7 @@ const closeMenu = () => {
   color: rgba(255, 255, 255, 0.75);
   letter-spacing: -0.01em;
   transition: all 0.3s ease;
+  will-change: color;
 }
 
 .nav-arrow {
@@ -370,6 +378,8 @@ const closeMenu = () => {
   color: rgba(255, 255, 255, 0.4);
   text-decoration: none;
   transition: all 0.3s ease;
+  will-change: transform, filter;
+  cursor: pointer;
 }
 
 .menu-contact-link:hover {

@@ -26,11 +26,11 @@
       </div>
 
       <!-- Scroll indicator -->
-      <button class="scroll-indicator">
+      <a class="scroll-indicator" href="#services">
         <svg viewBox="0 0 24 24" fill="none">
           <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-      </button>
+      </a>
     </main>
 
     <!-- Services Section -->
@@ -556,12 +556,29 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import Navbar from './components/Navbar.vue'
+import { useHeroAnimations } from './composables/useHeroAnimations'
+import { useServicesAnimations } from './composables/useServicesAnimations'
+import { useSolutionAnimations } from './composables/useSolutionAnimations'
+import { useUseCasesAnimations } from './composables/useUseCasesAnimations'
+import { useTechnologyAnimations } from './composables/useTechnologyAnimations'
+import { useContactAnimations } from './composables/useContactAnimations'
+import { useFooterAnimations } from './composables/useFooterAnimations'
+import { useScrollAnimations } from './composables/useScrollAnimations'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+
+// Usar animaciones
+useHeroAnimations()
+useServicesAnimations()
+useSolutionAnimations()
+useUseCasesAnimations()
+useTechnologyAnimations()
+useContactAnimations()
+useFooterAnimations()
 
 const services = [
   {
@@ -870,9 +887,10 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  will-change: transform, filter, opacity;
 }
 
-/* Announcement Button - Liquid Glass */
+/* Announcement Button enhanced */
 .announcement-button {
   display: inline-flex;
   align-items: center;
@@ -888,12 +906,12 @@ html, body {
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
+  will-change: transform, box-shadow, border-color;
+  position: relative;
+  overflow: hidden;
 }
 
 .announcement-button:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 1);
 }
 
 .announcement-button svg {
@@ -902,8 +920,6 @@ html, body {
 }
 
 .announcement-button:hover svg {
-  transform: translateX(3px);
-  opacity: 1;
 }
 
 .dot {
@@ -1131,6 +1147,7 @@ html, body {
   position: relative;
   padding-left: 0;
   letter-spacing: 0.02em;
+  will-change: transform, color;
 }
 
 .service-item::before {
@@ -1146,7 +1163,6 @@ html, body {
 }
 
 .service-item:hover {
-  color: rgba(255, 255, 255, 0.7);
 }
 
 .service-item.active {
@@ -1216,15 +1232,18 @@ html, body {
   background: rgba(255, 255, 255, 0.25);
   cursor: pointer;
   transition: all 0.3s ease;
+  will-change: transform, background;
 }
 
 .dot-indicator:hover {
   background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.2);
 }
 
 .dot-indicator.active {
   background: rgba(255, 200, 120, 0.9);
-  box-shadow: 0 0 12px rgba(255, 200, 120, 0.5);
+  box-shadow: 0 0 12px rgba(255, 200, 120, 0.6);
+  transform: scale(1.2);
 }
 
 /* Transitions */
@@ -1496,6 +1515,7 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  will-change: transform, text-shadow;
 }
 
 .solution-text {
@@ -1530,6 +1550,9 @@ html, body {
   box-shadow: 
     0 25px 80px rgba(0, 0, 0, 0.6),
     0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s ease;
+  will-change: transform, box-shadow;
+  cursor: pointer;
 }
 
 .solution-device-inner {
@@ -1577,6 +1600,17 @@ html, body {
   padding: 0.85rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 0.85rem;
+  transition: all 0.3s ease;
+  will-change: transform;
+  cursor: pointer;
+}
+
+.feature-icon {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  will-change: transform, color;
 }
 
 .feature-item span:last-child {
@@ -1711,6 +1745,7 @@ html, body {
   cursor: pointer;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
 }
 
 /* Border glow effect on hover */
@@ -1832,6 +1867,8 @@ html, body {
   cursor: pointer !important;
   border: none !important;
   outline: none !important;
+  transition: all 0.3s ease !important;
+  will-change: transform;
 }
 
 .accordion-header:hover {
@@ -1889,6 +1926,7 @@ html, body {
   color: rgba(255, 255, 255, 0.4) !important;
   transition: all 0.3s ease !important;
   flex-shrink: 0 !important;
+  will-change: transform, background, color;
 }
 
 .accordion-toggle .pi {
@@ -2134,6 +2172,8 @@ html, body {
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  will-change: transform, box-shadow, border-color;
+  cursor: pointer;
 }
 
 .timeline-item:hover .timeline-dot {
@@ -2191,6 +2231,8 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   transition: all 0.3s ease;
+  will-change: transform, box-shadow;
+  cursor: pointer;
 }
 
 .timeline-item:hover .timeline-card {
@@ -2341,6 +2383,8 @@ html, body {
   font-weight: 400;
   transition: all 0.3s ease;
   min-width: 220px;
+  will-change: transform, box-shadow, border-color;
+  cursor: pointer;
 }
 
 .contact-btn-content {
@@ -2358,6 +2402,7 @@ html, body {
   opacity: 0;
   transform: translate(-4px, 4px);
   transition: all 0.3s ease;
+  will-change: transform;
 }
 
 .contact-btn:hover .contact-btn-arrow {
@@ -2458,6 +2503,8 @@ html, body {
   width: 10rem;
   margin-bottom: 16px;
   opacity: 0.7;
+  will-change: transform, opacity;
+  cursor: pointer;
 }
 
 .footer-about {
@@ -2473,6 +2520,7 @@ html, body {
   letter-spacing: 0.15em;
   color: rgba(255, 255, 255, 0.4);
   margin-bottom: 20px;
+  will-change: opacity, letter-spacing;
 }
 
 .footer-links {
@@ -2489,7 +2537,10 @@ html, body {
   font-weight: 300;
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
+  will-change: transform, color;
+  display: inline-block;
+  cursor: pointer;
 }
 
 .footer-links li a:hover {
