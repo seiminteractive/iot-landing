@@ -917,6 +917,7 @@ html, body {
 .announcement-button svg {
   transition: transform 0.3s ease;
   opacity: 0.6;
+  will-change: transform;
 }
 
 .announcement-button:hover svg {

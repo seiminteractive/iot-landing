@@ -65,7 +65,23 @@ export function useNavbarAnimations() {
   }
 
   const setupCTAButtonHover = () => {
-    // No hay efectos de hover
+    const button = document.querySelector('.cta-button')
+    
+    if (button) {
+      button.addEventListener('mouseenter', () => {
+        gsap.to(button, {
+          background: 'rgba(255, 255, 255, 0.08)',
+          duration: 0.3,
+        })
+      })
+      
+      button.addEventListener('mouseleave', () => {
+        gsap.to(button, {
+          background: 'transparent',
+          duration: 0.3,
+        })
+      })
+    }
   }
 
   const setupMenuToggleHover = () => {

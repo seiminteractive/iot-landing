@@ -102,7 +102,39 @@ export function useHeroAnimations() {
   }
 
   const setupHoverEffects = () => {
-    // No hay efectos de hover
+    const button = document.querySelector('.announcement-button')
+    const svg = button?.querySelector('svg')
+    
+    if (button && svg) {
+      button.addEventListener('mouseenter', () => {
+        // Animación de la flecha (SVG)
+        gsap.to(svg, {
+          x: 4,
+          duration: 0.3,
+          ease: 'power2.out',
+        })
+        
+        // Fondo blanco apenas visible
+        gsap.to(button, {
+          background: 'rgba(255, 255, 255, 0.08)',
+          duration: 0.3,
+        })
+      })
+      
+      button.addEventListener('mouseleave', () => {
+        // Vuelve a posición original
+        gsap.to(svg, {
+          x: 0,
+          duration: 0.3,
+          ease: 'power2.out',
+        })
+        
+        gsap.to(button, {
+          background: 'transparent',
+          duration: 0.3,
+        })
+      })
+    }
   }
 
   onMounted(() => {

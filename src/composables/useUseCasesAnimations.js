@@ -70,28 +70,7 @@ export function useUseCasesAnimations() {
   }
 
   const animateUseCaseCards = () => {
-    // Animar cards en desktop con stagger
-    gsap.fromTo(
-      '.desktop-use-cases .use-case-card',
-      {
-        opacity: 0,
-        y: 60,
-        scale: 0.95,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        scrollTrigger: {
-          trigger: '.desktop-use-cases',
-          start: 'top 75%',
-          markers: false,
-        },
-        duration: 0.7,
-        stagger: 0.12,
-        ease: 'power2.out',
-      }
-    )
+    // Sin animaciones
   }
 
   const animateCardHover = () => {

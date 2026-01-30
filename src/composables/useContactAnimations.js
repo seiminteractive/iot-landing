@@ -104,6 +104,7 @@ export function useContactAnimations() {
       btn.addEventListener('mouseenter', () => {
         gsap.to(btn, {
           y: -8,
+          background: 'rgba(255, 255, 255, 0.08)',
           duration: 0.3,
           ease: 'power2.out',
         })
@@ -127,6 +128,7 @@ export function useContactAnimations() {
       btn.addEventListener('mouseleave', () => {
         gsap.to(btn, {
           y: 0,
+          background: 'transparent',
           duration: 0.3,
           ease: 'power2.out',
         })
