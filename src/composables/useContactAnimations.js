@@ -110,8 +110,8 @@ export function useContactAnimations() {
         })
 
         gsap.to(btn, {
-          boxShadow: '0 20px 40px rgba(255, 200, 120, 0.2)',
-          borderColor: 'rgba(255, 200, 120, 0.4)',
+          boxShadow: '0 20px 40px rgba(175, 227, 232, 0.2)',
+          borderColor: 'rgba(175, 227, 232, 0.4)',
           duration: 0.3,
         })
 
@@ -134,7 +134,7 @@ export function useContactAnimations() {
         })
 
         gsap.to(btn, {
-          boxShadow: '0 0px 0px rgba(255, 200, 120, 0)',
+          boxShadow: '0 0px 0px rgba(175, 227, 232, 0)',
           borderColor: 'rgba(255, 255, 255, 0.15)',
           duration: 0.3,
         })
@@ -175,7 +175,7 @@ export function useContactAnimations() {
   const setupButtonPulse = () => {
     // Efecto de pulso suave en los botones en reposo
     gsap.to('.contact-btn-arrow', {
-      filter: 'drop-shadow(0 0 8px rgba(255, 200, 120, 0.4))',
+      filter: 'drop-shadow(0 0 8px rgba(175, 227, 232, 0.4))',
       yoyo: true,
       repeat: -1,
       duration: 2,

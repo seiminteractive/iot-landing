@@ -62,7 +62,7 @@ export function useHeroAnimations() {
 
     // Efecto de glow en scroll indicator
     gsap.to('.scroll-indicator svg', {
-      filter: 'drop-shadow(0 0 12px rgba(255, 200, 120, 0.5))',
+      filter: 'drop-shadow(0 0 12px rgba(175, 227, 232, 0.5))',
       duration: 1,
       delay: 1.2,
       yoyo: true,

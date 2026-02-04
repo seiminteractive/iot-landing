@@ -123,12 +123,12 @@ export function useSolutionAnimations() {
       {
         opacity: 0,
         y: 30,
-        textShadow: '0 0 0px rgba(255, 200, 120, 0)',
+        textShadow: '0 0 0px #AFE3E8',
       },
       {
         opacity: 1,
         y: 0,
-        textShadow: '0 0 20px rgba(255, 200, 120, 0.3)',
+        textShadow: '0 0 20px rgba(175, 227, 232, 0.3)',
         duration: 0.8,
         ease: 'power2.out',
       },
@@ -218,7 +218,7 @@ export function useSolutionAnimations() {
         
         gsap.to(icon, {
           scale: 1.3,
-          color: 'rgba(255, 200, 120, 0.9)',
+          color: '#AFE3E8',
           duration: 0.3,
           ease: 'back.out',
         })
@@ -248,7 +248,7 @@ export function useSolutionAnimations() {
       device.addEventListener('mouseenter', () => {
         gsap.to(device, {
           y: -10,
-          boxShadow: '0 20px 60px rgba(255, 200, 120, 0.2)',
+          boxShadow: '0 20px 60px rgba(175, 227, 232, 0.2)',
           duration: 0.4,
           ease: 'power2.out',
         })
@@ -257,7 +257,7 @@ export function useSolutionAnimations() {
       device.addEventListener('mouseleave', () => {
         gsap.to(device, {
           y: 0,
-          boxShadow: '0 0px 0px rgba(255, 200, 120, 0)',
+          boxShadow: '0 0px 0px #AFE3E8',
           duration: 0.4,
           ease: 'power2.out',
         })

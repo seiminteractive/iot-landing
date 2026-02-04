@@ -151,7 +151,7 @@ export function useFooterAnimations() {
         link.addEventListener('mouseenter', () => {
           gsap.to(link, {
             x: 5,
-            color: 'rgba(255, 200, 120, 0.9)',
+            color: '#AFE3E8',
             duration: 0.2,
             ease: 'power2.out',
           })

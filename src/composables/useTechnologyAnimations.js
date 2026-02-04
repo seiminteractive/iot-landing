@@ -224,7 +224,7 @@ export function useTechnologyAnimations() {
         if (dot) {
           gsap.to(dot, {
             scale: 1.3,
-            boxShadow: '0 0 20px rgba(255, 200, 120, 0.6)',
+            boxShadow: '0 0 20px rgba(175, 227, 232, 0.6)',
             duration: 0.3,
             ease: 'back.out',
           })
@@ -241,7 +241,7 @@ export function useTechnologyAnimations() {
         if (dot) {
           gsap.to(dot, {
             scale: 1,
-            boxShadow: '0 0 0px rgba(255, 200, 120, 0)',
+            boxShadow: '0 0 0px #AFE3E8',
             duration: 0.3,
           })
         }

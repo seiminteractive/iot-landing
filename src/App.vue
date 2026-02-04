@@ -474,7 +474,7 @@
             <!-- WhatsApp -->
             <a href="https://wa.me/5493413551507" target="_blank" rel="noopener" class="contact-btn contact-btn-primary">
               <div class="contact-btn-content">
-                <i class="pi pi-whatsapp"></i>
+                <i class="pi pi-whatsapp whatsapp-icon-white"></i>
                 <span>Escribinos por WhatsApp</span>
               </div>
               <i class="pi pi-arrow-up-right contact-btn-arrow"></i>
@@ -820,21 +820,22 @@ html, body {
   width: 100%;
 }
 
+/* Gradientes cónicos - Luz superior (IoT cyan medio) */
 .conic-light-top {
   background: conic-gradient(
     from 180deg at 99.78% 35%,
     rgb(255, 255, 255) 0deg,
     rgb(255, 255, 255) 15deg,
-    rgb(255, 220, 150) 25deg,
-    rgb(255, 200, 120) 40deg,
-    rgba(255, 180, 100, 0.5) 60deg,
+    rgb(175, 227, 232) 25deg,
+    rgb(160, 212, 222) 40deg,
+    rgba(145, 195, 205, 0.5) 60deg,
     rgba(17, 17, 17, 0) 90deg,
     rgba(17, 17, 17, 0) 342deg,
     rgb(255, 255, 255) 360deg
   );
 }
 
-/* Gradientes cónicos - Luz inferior */
+/* Gradientes cónicos - Luz inferior (IoT cyan medio) */
 .conic-light-bottom {
   background: conic-gradient(
     from 0deg at 99.78% 65%,
@@ -842,12 +843,15 @@ html, body {
     rgb(255, 255, 255) 10deg,
     rgba(17, 17, 17, 0) 20deg,
     rgba(17, 17, 17, 0) 270deg,
-    rgb(255, 200, 120) 315deg,
-    rgb(255, 220, 150) 330deg,
+    rgb(160, 212, 222) 315deg,
+    rgb(175, 227, 232) 330deg,
     rgb(255, 255, 255) 342deg,
     rgb(255, 255, 255) 360deg
   );
 }
+
+
+
 
 /* Hero Section */
 .hero {
@@ -1085,7 +1089,7 @@ html, body {
 .deco-text-accent {
   font-size: 0.65rem;
   letter-spacing: 0.1em;
-  color: rgba(255, 200, 120, 0.7);
+  color: #AFE3E8;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -1159,7 +1163,7 @@ html, body {
   transform: translateY(-50%);
   width: 2px;
   height: 0;
-  background: rgba(255, 200, 120, 0.8);
+  background: #AFE3E8;
   transition: height 0.3s ease;
 }
 
@@ -1242,8 +1246,8 @@ html, body {
 }
 
 .dot-indicator.active {
-  background: rgba(255, 200, 120, 0.9);
-  box-shadow: 0 0 12px rgba(255, 200, 120, 0.6);
+  background: #AFE3E8;
+  box-shadow: 0 0 12px rgba(175, 227, 232, 0.6);
   transform: scale(1.2);
 }
 
@@ -1285,7 +1289,7 @@ html, body {
   font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.25em;
-  color: rgba(255, 200, 120, 0.6);
+  color: #AFE3E8;
 }
 
 .carousel-counter {
@@ -1364,7 +1368,7 @@ html, body {
 }
 
 .carousel-dot.active {
-  background: rgba(255, 200, 120, 0.7);
+  background: #AFE3E8;
   width: 18px;
   border-radius: 3px;
 }
@@ -1418,15 +1422,15 @@ html, body {
   filter: blur(40px);
   background: radial-gradient(
     ellipse 140% 100% at 50% 100%,
-    rgba(255, 240, 210, 1) 0%,
-    rgba(255, 230, 190, 0.85) 8%,
-    rgba(255, 220, 165, 0.7) 16%,
-    rgba(255, 210, 145, 0.55) 24%,
-    rgba(255, 200, 130, 0.42) 32%,
-    rgba(255, 190, 120, 0.3) 40%,
-    rgba(255, 180, 110, 0.2) 50%,
-    rgba(255, 170, 100, 0.12) 60%,
-    rgba(255, 160, 95, 0.05) 75%,
+    rgba(175, 227, 232, 1) 0%,
+    rgba(170, 220, 227, 0.85) 8%,
+    rgba(165, 212, 222, 0.7) 16%,
+    rgba(160, 205, 217, 0.55) 24%,
+    rgba(155, 197, 212, 0.42) 32%,
+    rgba(150, 190, 207, 0.3) 40%,
+    rgba(145, 182, 202, 0.2) 50%,
+    rgba(140, 175, 197, 0.12) 60%,
+    rgba(135, 167, 192, 0.05) 75%,
     rgba(0, 0, 0, 0) 100%
   );
 }
@@ -1495,7 +1499,7 @@ html, body {
     to bottom,
     rgba(255, 255, 255, 0.6) 0%,
     rgba(255, 255, 255, 0.85) 50%,
-    rgba(255, 240, 220, 1) 100%
+    #AFE3E8 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1511,7 +1515,7 @@ html, body {
     to bottom,
     rgba(255, 255, 255, 0.6) 0%,
     rgba(255, 255, 255, 0.85) 50%,
-    rgba(255, 240, 220, 1) 100%
+    #AFE3E8 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1528,7 +1532,7 @@ html, body {
     to bottom,
     rgba(255, 255, 255, 0.35) 0%,
     rgba(255, 255, 255, 0.55) 50%,
-    rgba(255, 230, 200, 0.75) 100%
+    #AFE3E8 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1619,7 +1623,7 @@ html, body {
     to bottom,
     rgba(255, 255, 255, 0.5) 0%,
     rgba(255, 255, 255, 0.75) 50%,
-    rgba(255, 230, 200, 0.9) 100%
+    #AFE3E8 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1635,7 +1639,7 @@ html, body {
 }
 
 .feature-icon {
-  color: rgba(255, 200, 120, 0.5);
+  color: #AFE3E8;
   font-size: 0.75rem;
 }
 
@@ -1899,7 +1903,7 @@ html, body {
 }
 
 .accordion-item[data-state="open"] .accordion-icon {
-  color: rgba(255, 200, 120, 0.8);
+  color: #AFE3E8;
 }
 
 .accordion-title {
@@ -1935,8 +1939,8 @@ html, body {
 }
 
 .accordion-item[data-state="open"] .accordion-toggle {
-  background: rgba(255, 200, 120, 0.15) !important;
-  color: rgba(255, 200, 120, 0.9) !important;
+  background: rgba(175, 227, 232, 0.15) !important;
+  color: #AFE3E8 !important;
 }
 
 /* AccordionContent */
@@ -2020,9 +2024,9 @@ html, body {
     from 180deg at 99.78% 35%,
     rgb(255, 255, 255) 0deg,
     rgb(255, 255, 255) 15deg,
-    rgb(255, 220, 150) 25deg,
-    rgb(255, 200, 120) 40deg,
-    rgba(255, 180, 100, 0.5) 60deg,
+    rgb(175, 227, 232) 25deg,
+    rgb(160, 212, 222) 40deg,
+    rgba(145, 195, 205, 0.5) 60deg,
     rgba(17, 17, 17, 0) 90deg,
     rgba(17, 17, 17, 0) 342deg,
     rgb(255, 255, 255) 360deg
@@ -2037,8 +2041,8 @@ html, body {
     rgb(255, 255, 255) 10deg,
     rgba(17, 17, 17, 0) 20deg,
     rgba(17, 17, 17, 0) 270deg,
-    rgb(255, 200, 120) 315deg,
-    rgb(255, 220, 150) 330deg,
+    rgb(160, 212, 222) 315deg,
+    rgb(175, 227, 232) 330deg,
     rgb(255, 255, 255) 342deg,
     rgb(255, 255, 255) 360deg
   );
@@ -2136,9 +2140,9 @@ html, body {
   width: 100%;
   background: linear-gradient(
     90deg,
-    rgba(255, 200, 120, 0.6) 0%,
+    rgba(175, 227, 232, 0.6) 0%,
     rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 200, 120, 0.6) 100%
+    rgba(175, 227, 232, 0.6) 100%
   );
 }
 
@@ -2178,8 +2182,8 @@ html, body {
 }
 
 .timeline-item:hover .timeline-dot {
-  border-color: rgba(255, 200, 120, 0.8);
-  box-shadow: 0 0 15px rgba(255, 200, 120, 0.3);
+  border-color: rgba(175, 227, 232, 0.8);
+  box-shadow: 0 0 15px rgba(175, 227, 232, 0.3);
 }
 
 .dot-inner {
@@ -2191,7 +2195,7 @@ html, body {
 }
 
 .timeline-item:hover .dot-inner {
-  background: rgba(255, 200, 120, 1);
+  background: #AFE3E8;
 }
 
 /* Vertical Line */
@@ -2254,7 +2258,7 @@ html, body {
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: rgba(255, 200, 120, 0.6);
+  color: rgba(175, 227, 232, 0.6);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
 }
@@ -2277,36 +2281,36 @@ html, body {
 }
 
 /* Efecto de iluminación gradual - más brillante a la izquierda */
-.timeline-item:nth-child(1) .step-label { color: rgba(255, 220, 150, 1); }
+.timeline-item:nth-child(1) .step-label { color: #AFE3E8; }
 .timeline-item:nth-child(1) .step-title { color: rgba(255, 255, 255, 1); }
 .timeline-item:nth-child(1) .step-description { color: rgba(255, 255, 255, 0.8); }
 
-.timeline-item:nth-child(2) .step-label { color: rgba(255, 210, 140, 0.85); }
+.timeline-item:nth-child(2) .step-label { color: rgba(175, 227, 232, 0.85); }
 .timeline-item:nth-child(2) .step-title { color: rgba(255, 255, 255, 0.95); }
 .timeline-item:nth-child(2) .step-description { color: rgba(255, 255, 255, 0.7); }
 
-.timeline-item:nth-child(3) .step-label { color: rgba(255, 200, 120, 0.7); }
+.timeline-item:nth-child(3) .step-label { color: rgba(175, 227, 232, 0.7); }
 .timeline-item:nth-child(3) .step-title { color: rgba(255, 255, 255, 0.88); }
 .timeline-item:nth-child(3) .step-description { color: rgba(255, 255, 255, 0.6); }
 
-.timeline-item:nth-child(4) .step-label { color: rgba(255, 200, 120, 0.55); }
+.timeline-item:nth-child(4) .step-label { color: rgba(175, 227, 232, 0.55); }
 .timeline-item:nth-child(4) .step-title { color: rgba(255, 255, 255, 0.8); }
 .timeline-item:nth-child(4) .step-description { color: rgba(255, 255, 255, 0.5); }
 
-.timeline-item:nth-child(5) .step-label { color: rgba(255, 200, 120, 0.45); }
+.timeline-item:nth-child(5) .step-label { color: rgba(175, 227, 232, 0.45); }
 .timeline-item:nth-child(5) .step-title { color: rgba(255, 255, 255, 0.72); }
 .timeline-item:nth-child(5) .step-description { color: rgba(255, 255, 255, 0.42); }
 
-.timeline-item:nth-child(6) .step-label { color: rgba(255, 200, 120, 0.35); }
+.timeline-item:nth-child(6) .step-label { color: rgba(175, 227, 232, 0.35); }
 .timeline-item:nth-child(6) .step-title { color: rgba(255, 255, 255, 0.65); }
 .timeline-item:nth-child(6) .step-description { color: rgba(255, 255, 255, 0.35); }
 
 /* Dots gradual illumination */
-.timeline-item:nth-child(1) .timeline-dot { border-color: rgba(255, 220, 150, 0.9); }
-.timeline-item:nth-child(1) .dot-inner { background: rgba(255, 220, 150, 1); }
+.timeline-item:nth-child(1) .timeline-dot { border-color: #AFE3E8; }
+.timeline-item:nth-child(1) .dot-inner { background: #AFE3E8; }
 
-.timeline-item:nth-child(2) .timeline-dot { border-color: rgba(255, 210, 140, 0.7); }
-.timeline-item:nth-child(2) .dot-inner { background: rgba(255, 220, 160, 0.9); }
+.timeline-item:nth-child(2) .timeline-dot { border-color: rgba(175, 227, 232, 0.7); }
+.timeline-item:nth-child(2) .dot-inner { background: rgba(175, 227, 232, 0.9); }
 
 .timeline-item:nth-child(3) .timeline-dot { border-color: rgba(255, 255, 255, 0.5); }
 .timeline-item:nth-child(3) .dot-inner { background: rgba(255, 255, 255, 0.85); }
@@ -2343,7 +2347,7 @@ html, body {
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.25em;
-  color: rgba(255, 200, 120, 0.7);
+  color: rgba(175, 227, 232, 0.7);
   text-transform: uppercase;
   margin-bottom: 1.5rem;
 }
@@ -2426,6 +2430,10 @@ html, body {
   color: rgba(37, 211, 102, 0.9);
 }
 
+.whatsapp-icon-white {
+  color: white !important;
+}
+
 .contact-btn-secondary {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2462,12 +2470,12 @@ html, body {
   height: 120%;
   background: radial-gradient(
     ellipse 160% 100% at 50% 120%,
-    rgba(255, 220, 180, 0.5) 0%,
-    rgba(255, 200, 150, 0.35) 10%,
-    rgba(255, 180, 120, 0.25) 25%,
-    rgba(220, 160, 100, 0.15) 40%,
-    rgba(180, 130, 90, 0.08) 55%,
-    rgba(120, 90, 60, 0.04) 70%,
+    rgba(175, 227, 232, 0.5) 0%,
+    rgba(170, 220, 227, 0.35) 10%,
+    rgba(165, 212, 222, 0.25) 25%,
+    rgba(160, 205, 217, 0.15) 40%,
+    rgba(155, 197, 212, 0.08) 55%,
+    rgba(150, 190, 207, 0.04) 70%,
     transparent 100%
   );
   filter: blur(50px);
@@ -2545,7 +2553,7 @@ html, body {
 }
 
 .footer-links li a:hover {
-  color: rgba(255, 200, 120, 0.9);
+  color: #AFE3E8;
 }
 
 /* Footer bottom */
@@ -2667,9 +2675,9 @@ html, body {
     height: 100%;
     background: linear-gradient(
       180deg,
-      rgba(255, 200, 120, 0.6) 0%,
+      rgba(175, 227, 232, 0.6) 0%,
       rgba(255, 255, 255, 0.4) 50%,
-      rgba(255, 200, 120, 0.6) 100%
+      rgba(175, 227, 232, 0.6) 100%
     );
   }
   

@@ -83,7 +83,7 @@ export function useUseCasesAnimations() {
         if (icon) {
           gsap.to(icon, {
             scale: 1.2,
-            stroke: 'rgba(255, 200, 120, 0.9)',
+            stroke: '#AFE3E8',
             duration: 0.3,
             ease: 'back.out',
           })

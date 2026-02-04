@@ -67,9 +67,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useNavbarAnimations } from '../composables/useNavbarAnimations'
+import { useNavbarScrollEffect } from '../composables/useNavbarScrollEffect'
 
 // Inicializar animaciones del navbar
 useNavbarAnimations()
+
+// Inicializar efecto de scroll del navbar
+useNavbarScrollEffect()
 
 const menuOpen = ref(false)
 
@@ -107,11 +111,13 @@ const closeMenu = () => {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.06) 0%,
-    rgba(255, 220, 150, 0.03) 50%,
+    rgba(175, 227, 232, 0.03) 50%,
     rgba(255, 255, 255, 0.04) 100%
   );
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 16px 0 rgba(255, 200, 120, 0.03);
+  box-shadow: 0 4px 16px 0 rgba(175, 227, 232, 0.03);
+  will-change: background, border-bottom, box-shadow;
+  --header-opacity: 1;
 }
 
 .header::before {
@@ -125,6 +131,8 @@ const closeMenu = () => {
   -webkit-backdrop-filter: blur(10px);
   pointer-events: none;
   z-index: -1;
+  opacity: var(--header-opacity);
+  transition: opacity 0.3s ease;
 }
 
 .logo {
@@ -281,7 +289,7 @@ const closeMenu = () => {
   font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.25em;
-  color: rgba(255, 200, 120, 0.6);
+  color: rgba(175, 227, 232, 0.6);
   margin-bottom: 2rem;
 }
 
@@ -350,7 +358,7 @@ const closeMenu = () => {
 .mobile-nav-link:active .nav-arrow {
   transform: translateX(0);
   opacity: 1;
-  color: rgba(255, 200, 120, 0.7);
+  color: rgba(175, 227, 232, 0.7);
 }
 
 /* Menu Footer */
@@ -383,7 +391,7 @@ const closeMenu = () => {
 }
 
 .menu-contact-link:hover {
-  color: rgba(255, 200, 120, 0.9);
+  color: #AFE3E8;
 }
 
 .menu-copyright {
