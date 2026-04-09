@@ -1,324 +1,283 @@
 import { onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { addHoverListeners, afterNextPaint, isMobileLayout, isVisibleElement } from './animationUtils'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function useUseCasesAnimations() {
-  let animations = []
+  let context
+  let cancelSetup = () => {}
+  let accordionObserver = null
+  const cleanups = []
 
   const animateUseCasesHeader = () => {
+    const section = document.querySelector('.use-cases-section')
+    if (!isVisibleElement(section)) return
+
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: '.use-cases-section',
-        start: 'top 60%',
-        end: 'top 20%',
-        scrub: 1,
-        markers: false,
+        trigger: section,
+        start: 'top 72%',
+        once: true,
       },
     })
 
-    // Animar label
     tl.fromTo(
       '.use-cases-label',
       {
         opacity: 0,
-        y: -20,
+        y: -18,
       },
       {
         opacity: 1,
         y: 0,
-        duration: 0.6,
+        duration: 0.5,
         ease: 'power2.out',
       },
       0
     )
-
-    // Animar título
-    tl.fromTo(
-      '.use-cases-title',
-      {
-        opacity: 0,
-        y: 40,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-      },
-      0.1
-    )
-
-    // Animar subtitle
-    tl.fromTo(
-      '.use-cases-subtitle',
-      {
-        opacity: 0,
-        y: 20,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-      },
-      0.2
-    )
-
-    animations.push(tl)
-  }
-
-  const animateUseCaseCards = () => {
-    // Sin animaciones
+      .fromTo(
+        '.use-cases-title',
+        {
+          opacity: 0,
+          y: 30,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.65,
+          ease: 'power2.out',
+        },
+        0.08
+      )
+      .fromTo(
+        '.use-cases-subtitle',
+        {
+          opacity: 0,
+          y: 18,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+        },
+        0.16
+      )
   }
 
   const animateCardHover = () => {
-    const cards = document.querySelectorAll('.use-case-card')
-    
-    cards.forEach((card) => {
-      const icon = card.querySelector('.card-icon svg')
-      
-      card.addEventListener('mouseenter', () => {
-        if (icon) {
+    const cards = Array.from(document.querySelectorAll('.use-case-card'))
+
+    cleanups.push(
+      addHoverListeners(
+        cards,
+        (card) => {
+          const icon = card.querySelector('.card-icon svg')
+          if (!icon) return
+
           gsap.to(icon, {
             scale: 1.2,
             stroke: '#AFE3E8',
-            duration: 0.3,
-            ease: 'back.out',
+            duration: 0.25,
+            ease: 'back.out(1.4)',
+            overwrite: 'auto',
           })
-        }
-      })
+        },
+        (card) => {
+          const icon = card.querySelector('.card-icon svg')
+          if (!icon) return
 
-      card.addEventListener('mouseleave', () => {
-        if (icon) {
           gsap.to(icon, {
             scale: 1,
             stroke: 'rgba(255, 255, 255, 0.4)',
-            duration: 0.3,
+            duration: 0.25,
+            overwrite: 'auto',
           })
         }
-      })
-    })
+      )
+    )
   }
 
   const animateMobileAccordion = () => {
-    // Animar el accordion en mobile
+    const accordion = document.querySelector('.mobile-use-cases-accordion')
+    if (!isVisibleElement(accordion) || !isMobileLayout()) return
+
     gsap.fromTo(
-      '.mobile-use-cases-accordion',
+      accordion,
       {
         opacity: 0,
-        y: 40,
+        y: 36,
       },
       {
         opacity: 1,
         y: 0,
-        scrollTrigger: {
-          trigger: '.mobile-use-cases-accordion',
-          start: 'top 80%',
-          markers: false,
-        },
-        duration: 0.8,
+        duration: 0.65,
         ease: 'power2.out',
+        scrollTrigger: {
+          trigger: accordion,
+          start: 'top 82%',
+          once: true,
+        },
       }
     )
 
-    // Animar items individuales
     gsap.fromTo(
       '.accordion-item',
       {
         opacity: 0,
-        x: -40,
+        x: -28,
       },
       {
         opacity: 1,
         x: 0,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: '.accordion-item:first-child',
-          start: 'top 85%',
-          markers: false,
+          start: 'top 88%',
+          once: true,
         },
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'power2.out',
       }
     )
   }
 
   const animateAccordionOpen = () => {
-    // Observar cambios en los accordion items cuando se abren/cierran
-    const observer = new MutationObserver((mutations) => {
+    const accordionItems = document.querySelectorAll('.accordion-item')
+    if (!accordionItems.length || !isMobileLayout()) return
+
+    accordionObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'data-state') {
-          const item = mutation.target
-          const content = item.querySelector('.accordion-content')
-          
-          if (content) {
-            const state = item.getAttribute('data-state')
-            
-            if (state === 'open') {
-              // Animar cuando se ABRE
-              gsap.killTweensOf(content)
-              gsap.killTweensOf(content.querySelector('.accordion-content-inner'))
-              
-              gsap.fromTo(
-                content,
-                {
-                  opacity: 0,
-                  y: -15,
-                },
-                {
-                  opacity: 1,
-                  y: 0,
-                  duration: 0.5,
-                  ease: 'power2.out',
-                }
-              )
+        if (mutation.attributeName !== 'data-state') return
 
-              // Animar los elementos internos
-              const innerContent = content.querySelector('.accordion-content-inner')
-              if (innerContent) {
-                gsap.fromTo(
-                  innerContent,
-                  {
-                    opacity: 0,
-                    scale: 0.95,
-                    y: -10,
-                  },
-                  {
-                    opacity: 1,
-                    scale: 1,
-                    y: 0,
-                    duration: 0.5,
-                    ease: 'power2.out',
-                    delay: 0.1,
-                  }
-                )
-              }
+        const item = mutation.target
+        const content = item.querySelector('.accordion-content')
+        const innerContent = content?.querySelector('.accordion-content-inner')
+        const header = item.querySelector('.accordion-header')
+        const isOpen = item.getAttribute('data-state') === 'open'
 
-              // Animar el header
-              const header = item.querySelector('.accordion-header')
-              if (header) {
-                gsap.to(header, {
-                  x: 5,
-                  duration: 0.3,
-                  ease: 'power2.out',
-                })
-              }
-            } else if (state === 'closed') {
-              // Animar cuando se CIERRA (igual que apertura)
-              gsap.killTweensOf(content)
-              gsap.killTweensOf(content.querySelector('.accordion-content-inner'))
-              
-              gsap.fromTo(
-                content,
-                {
-                  opacity: 1,
-                  y: 0,
-                },
-                {
-                  opacity: 0,
-                  y: -15,
-                  duration: 0.5,
-                  ease: 'power2.out',
-                }
-              )
+        if (!content) return
 
-              // Animar los elementos internos al cerrar
-              const innerContent = content.querySelector('.accordion-content-inner')
-              if (innerContent) {
-                gsap.fromTo(
-                  innerContent,
-                  {
-                    opacity: 1,
-                    scale: 1,
-                    y: 0,
-                  },
-                  {
-                    opacity: 0,
-                    scale: 0.95,
-                    y: -10,
-                    duration: 0.5,
-                    ease: 'power2.out',
-                    delay: 0.1,
-                  }
-                )
-              }
+        gsap.killTweensOf(content)
+        if (innerContent) {
+          gsap.killTweensOf(innerContent)
+        }
 
-              // Animar el header al cerrar
-              const header = item.querySelector('.accordion-header')
-              if (header) {
-                gsap.to(header, {
-                  x: 0,
-                  duration: 0.3,
-                  ease: 'power2.out',
-                })
-              }
-            }
+        gsap.fromTo(
+          content,
+          {
+            opacity: isOpen ? 0 : 1,
+            y: isOpen ? -12 : 0,
+          },
+          {
+            opacity: isOpen ? 1 : 0,
+            y: isOpen ? 0 : -12,
+            duration: 0.35,
+            ease: 'power2.out',
+            overwrite: 'auto',
           }
+        )
+
+        if (innerContent) {
+          gsap.fromTo(
+            innerContent,
+            {
+              opacity: isOpen ? 0 : 1,
+              scale: isOpen ? 0.97 : 1,
+              y: isOpen ? -8 : 0,
+            },
+            {
+              opacity: isOpen ? 1 : 0,
+              scale: isOpen ? 1 : 0.97,
+              y: isOpen ? 0 : -8,
+              duration: 0.35,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            }
+          )
+        }
+
+        if (header) {
+          gsap.to(header, {
+            x: isOpen ? 5 : 0,
+            duration: 0.25,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
         }
       })
     })
 
-    // Configurar observer para todos los accordion items
-    const accordionItems = document.querySelectorAll('.accordion-item')
     accordionItems.forEach((item) => {
-      observer.observe(item, { attributes: true })
+      accordionObserver.observe(item, { attributes: true })
     })
   }
 
   const animateAccordionHeaderHover = () => {
-    const headers = document.querySelectorAll('.accordion-header')
-    
-    headers.forEach((header) => {
-      const toggle = header.querySelector('.accordion-toggle')
-      
-      header.addEventListener('mouseenter', () => {
-        gsap.to(header, {
-          x: 5,
-          duration: 0.3,
-          ease: 'power2.out',
-        })
+    const headers = Array.from(document.querySelectorAll('.accordion-header'))
 
-        if (toggle) {
-          gsap.to(toggle, {
-            scale: 1.15,
-            duration: 0.3,
-            ease: 'back.out',
+    cleanups.push(
+      addHoverListeners(
+        headers,
+        (header) => {
+          const toggle = header.querySelector('.accordion-toggle')
+
+          gsap.to(header, {
+            x: 5,
+            duration: 0.25,
+            ease: 'power2.out',
+            overwrite: 'auto',
           })
-        }
-      })
 
-      header.addEventListener('mouseleave', () => {
-        gsap.to(header, {
-          x: 0,
-          duration: 0.3,
-          ease: 'power2.out',
-        })
+          if (toggle) {
+            gsap.to(toggle, {
+              scale: 1.12,
+              duration: 0.25,
+              ease: 'back.out(1.4)',
+              overwrite: 'auto',
+            })
+          }
+        },
+        (header) => {
+          const toggle = header.querySelector('.accordion-toggle')
 
-        if (toggle) {
-          gsap.to(toggle, {
-            scale: 1,
-            duration: 0.3,
+          gsap.to(header, {
+            x: 0,
+            duration: 0.25,
+            ease: 'power2.out',
+            overwrite: 'auto',
           })
+
+          if (toggle) {
+            gsap.to(toggle, {
+              scale: 1,
+              duration: 0.25,
+              overwrite: 'auto',
+            })
+          }
         }
-      })
-    })
+      )
+    )
   }
 
   onMounted(() => {
-    setTimeout(() => {
-      animateUseCasesHeader()
-      animateUseCaseCards()
-      animateCardHover()
-      animateMobileAccordion()
-      animateAccordionOpen()
-      animateAccordionHeaderHover()
-    }, 300)
+    cancelSetup = afterNextPaint(() => {
+      context = gsap.context(() => {
+        animateUseCasesHeader()
+        animateCardHover()
+        animateMobileAccordion()
+        animateAccordionOpen()
+        animateAccordionHeaderHover()
+      })
+    })
   })
 
   onUnmounted(() => {
-    animations.forEach(anim => anim.kill())
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+    cancelSetup()
+    cleanups.forEach((cleanup) => cleanup())
+    accordionObserver?.disconnect()
+    context?.revert()
   })
 }

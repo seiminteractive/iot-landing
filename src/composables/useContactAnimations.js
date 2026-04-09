@@ -1,20 +1,24 @@
 import { onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { addHoverListeners, afterNextPaint, hasFinePointer, isMobileLayout, isVisibleElement } from './animationUtils'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function useContactAnimations() {
-  let animations = []
+  let context
+  let cancelSetup = () => {}
+  const cleanups = []
 
   const animateContactHeader = () => {
+    const section = document.querySelector('.contact-section')
+    if (!isVisibleElement(section)) return
+
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: '.contact-section',
-        start: 'top 60%',
-        end: 'top 10%',
-        scrub: 1,
-        markers: false,
+        trigger: section,
+        start: 'top 72%',
+        once: true,
       },
     })
 
@@ -98,56 +102,56 @@ export function useContactAnimations() {
   const animateContactButtonsHover = () => {
     const buttons = document.querySelectorAll('.contact-btn')
 
-    buttons.forEach((btn) => {
-      const arrow = btn.querySelector('.contact-btn-arrow')
+    cleanups.push(
+      addHoverListeners(
+        Array.from(buttons),
+        (btn) => {
+          const arrow = btn.querySelector('.contact-btn-arrow')
 
-      btn.addEventListener('mouseenter', () => {
-        gsap.to(btn, {
-          y: -8,
-          background: 'rgba(255, 255, 255, 0.08)',
-          duration: 0.3,
-          ease: 'power2.out',
-        })
-
-        gsap.to(btn, {
-          boxShadow: '0 20px 40px rgba(175, 227, 232, 0.2)',
-          borderColor: 'rgba(175, 227, 232, 0.4)',
-          duration: 0.3,
-        })
-
-        if (arrow) {
-          gsap.to(arrow, {
-            x: 4,
-            y: -4,
-            duration: 0.3,
+          gsap.to(btn, {
+            y: -8,
+            background: 'rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 20px 40px rgba(175, 227, 232, 0.2)',
+            borderColor: 'rgba(175, 227, 232, 0.4)',
+            duration: 0.25,
             ease: 'power2.out',
+            overwrite: 'auto',
           })
-        }
-      })
 
-      btn.addEventListener('mouseleave', () => {
-        gsap.to(btn, {
-          y: 0,
-          background: 'transparent',
-          duration: 0.3,
-          ease: 'power2.out',
-        })
+          if (arrow) {
+            gsap.to(arrow, {
+              x: 4,
+              y: -4,
+              duration: 0.25,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            })
+          }
+        },
+        (btn) => {
+          const arrow = btn.querySelector('.contact-btn-arrow')
 
-        gsap.to(btn, {
-          boxShadow: '0 0px 0px rgba(175, 227, 232, 0)',
-          borderColor: 'rgba(255, 255, 255, 0.15)',
-          duration: 0.3,
-        })
-
-        if (arrow) {
-          gsap.to(arrow, {
-            x: 0,
+          gsap.to(btn, {
             y: 0,
-            duration: 0.3,
+            background: 'transparent',
+            boxShadow: '0 0px 0px rgba(175, 227, 232, 0)',
+            borderColor: 'rgba(255, 255, 255, 0.15)',
+            duration: 0.25,
+            ease: 'power2.out',
+            overwrite: 'auto',
           })
+
+          if (arrow) {
+            gsap.to(arrow, {
+              x: 0,
+              y: 0,
+              duration: 0.25,
+              overwrite: 'auto',
+            })
+          }
         }
-      })
-    })
+      )
+    )
   }
 
   const animateContactNote = () => {
@@ -173,7 +177,8 @@ export function useContactAnimations() {
   }
 
   const setupButtonPulse = () => {
-    // Efecto de pulso suave en los botones en reposo
+    if (!hasFinePointer() || isMobileLayout()) return
+
     gsap.to('.contact-btn-arrow', {
       filter: 'drop-shadow(0 0 8px rgba(175, 227, 232, 0.4))',
       yoyo: true,
@@ -184,17 +189,20 @@ export function useContactAnimations() {
   }
 
   onMounted(() => {
-    setTimeout(() => {
-      animateContactHeader()
-      animateContactButtons()
-      animateContactButtonsHover()
-      animateContactNote()
-      setupButtonPulse()
-    }, 300)
+    cancelSetup = afterNextPaint(() => {
+      context = gsap.context(() => {
+        animateContactHeader()
+        animateContactButtons()
+        animateContactButtonsHover()
+        animateContactNote()
+        setupButtonPulse()
+      })
+    })
   })
 
   onUnmounted(() => {
-    animations.forEach(anim => anim.kill())
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+    cancelSetup()
+    cleanups.forEach((cleanup) => cleanup())
+    context?.revert()
   })
 }

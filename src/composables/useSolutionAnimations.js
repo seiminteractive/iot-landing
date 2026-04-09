@@ -1,20 +1,24 @@
 import { onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { addHoverListeners, afterNextPaint, isMobileLayout, isVisibleElement } from './animationUtils'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function useSolutionAnimations() {
-  let animations = []
+  let context
+  let cancelSetup = () => {}
+  const cleanups = []
 
   const animateSolutionSection = () => {
+    const section = document.querySelector('.solution-section')
+    if (!isVisibleElement(section)) return
+
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: '.solution-section',
-        start: 'top 60%',
-        end: 'top 10%',
-        scrub: 1,
-        markers: false,
+        trigger: section,
+        start: 'top 72%',
+        once: true,
       },
     })
 
@@ -204,64 +208,82 @@ export function useSolutionAnimations() {
   }
 
   const animateFeatureIcons = () => {
-    const featureItems = document.querySelectorAll('.feature-item')
-    
-    featureItems.forEach((item) => {
-      const icon = item.querySelector('.feature-icon')
-      
-      item.addEventListener('mouseenter', () => {
-        gsap.to(item, {
-          x: 15,
-          duration: 0.3,
-          ease: 'power2.out',
-        })
-        
-        gsap.to(icon, {
-          scale: 1.3,
-          color: '#AFE3E8',
-          duration: 0.3,
-          ease: 'back.out',
-        })
-      })
+    const featureItems = Array.from(document.querySelectorAll('.feature-item'))
 
-      item.addEventListener('mouseleave', () => {
-        gsap.to(item, {
-          x: 0,
-          duration: 0.3,
-          ease: 'power2.out',
-        })
-        
-        gsap.to(icon, {
-          scale: 1,
-          color: 'rgba(255, 255, 255, 0.4)',
-          duration: 0.3,
-          ease: 'power2.out',
-        })
-      })
-    })
+    cleanups.push(
+      addHoverListeners(
+        featureItems,
+        (item) => {
+          const icon = item.querySelector('.feature-icon')
+
+          gsap.to(item, {
+            x: 15,
+            duration: 0.25,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
+
+          if (icon) {
+            gsap.to(icon, {
+              scale: 1.2,
+              color: '#AFE3E8',
+              duration: 0.25,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            })
+          }
+        },
+        (item) => {
+          const icon = item.querySelector('.feature-icon')
+
+          gsap.to(item, {
+            x: 0,
+            duration: 0.25,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
+
+          if (icon) {
+            gsap.to(icon, {
+              scale: 1,
+              color: 'rgba(255, 255, 255, 0.4)',
+              duration: 0.25,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            })
+          }
+        }
+      )
+    )
   }
 
   const animateDeviceHover = () => {
     const device = document.querySelector('.solution-device')
     
     if (device) {
-      device.addEventListener('mouseenter', () => {
-        gsap.to(device, {
-          y: -10,
-          boxShadow: '0 20px 60px rgba(175, 227, 232, 0.2)',
-          duration: 0.4,
-          ease: 'power2.out',
-        })
-      })
-
-      device.addEventListener('mouseleave', () => {
-        gsap.to(device, {
-          y: 0,
-          boxShadow: '0 0px 0px #AFE3E8',
-          duration: 0.4,
-          ease: 'power2.out',
-        })
-      })
+      cleanups.push(
+        addHoverListeners(
+          [device],
+          () => {
+            gsap.to(device, {
+              y: -10,
+              boxShadow: '0 20px 60px rgba(175, 227, 232, 0.2)',
+              duration: 0.3,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            })
+          },
+          () => {
+            gsap.to(device, {
+              y: 0,
+              boxShadow: '0 0px 0px rgba(175, 227, 232, 0)',
+              duration: 0.3,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            })
+          }
+        )
+      )
     }
   }
 
@@ -278,10 +300,8 @@ export function useSolutionAnimations() {
         opacity: 1,
         scrollTrigger: {
           trigger: '.solution-section',
-          start: 'top 60%',
-          end: 'top 20%',
-          scrub: 1,
-          markers: false,
+          start: 'top 72%',
+          once: true,
         },
         duration: 0.8,
         ease: 'power2.out',
@@ -290,32 +310,41 @@ export function useSolutionAnimations() {
   }
 
   const animateSolutionLight = () => {
-    // Animar el fondo de luz
-    gsap.to('.solution-light', {
-      scrollTrigger: {
-        trigger: '.solution-section',
-        start: 'top 80%',
-        end: 'bottom 20%',
-        scrub: 1,
-        markers: false,
+    if (isMobileLayout()) return
+
+    gsap.fromTo(
+      '.solution-light',
+      {
+        opacity: 0.7,
       },
-      opacity: 1,
-      duration: 0.8,
-    })
+      {
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.solution-section',
+          start: 'top 80%',
+          once: true,
+        },
+      }
+    )
   }
 
   onMounted(() => {
-    setTimeout(() => {
-      animateSolutionSection()
-      animateFeatureIcons()
-      animateDeviceHover()
-      animateSeparators()
-      animateSolutionLight()
-    }, 300)
+    cancelSetup = afterNextPaint(() => {
+      context = gsap.context(() => {
+        animateSolutionSection()
+        animateFeatureIcons()
+        animateDeviceHover()
+        animateSeparators()
+        animateSolutionLight()
+      })
+    })
   })
 
   onUnmounted(() => {
-    animations.forEach(anim => anim.kill())
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+    cancelSetup()
+    cleanups.forEach((cleanup) => cleanup())
+    context?.revert()
   })
 }

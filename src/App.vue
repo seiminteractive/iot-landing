@@ -173,7 +173,7 @@
           
           <div class="solution-device">
             <div class="solution-device-inner">
-              <img src="./assets/capturaLoginPlataforma.png" alt="Plataforma de Control Industrial" class="device-image" />
+              <img src="./assets/capturaLoginPlataforma02.png" alt="Plataforma de Control Industrial" class="device-image" loading="lazy" decoding="async" />
             </div>
           </div>
 
@@ -506,7 +506,7 @@
         <div class="footer-grid">
           <!-- Column 1 - Logo & About -->
           <div class="footer-column footer-brand">
-            <img src="./assets/MARCA-14.png" alt="SEIM" class="footer-logo" />
+            <img src="./assets/MARCA-14.png" alt="SEIM" class="footer-logo" loading="lazy" decoding="async" />
             <p class="footer-about">
               Soluciones de telemetría industrial que conectan planta y nube de forma segura y confiable.
             </p>
@@ -694,6 +694,8 @@ const useCases = [
 ]
 
 const activeUseCaseIndex = ref(null)
+let removeViewportHeightListeners = null
+let lastViewportWidth = 0
 
 const toggleUseCase = (index) => {
   if (activeUseCaseIndex.value === index) {
@@ -733,19 +735,69 @@ const handleTouchEnd = () => {
   startAutoScroll()
 }
 
+const updateAppHeight = () => {
+  const viewportHeight = window.innerHeight
+  lastViewportWidth = window.innerWidth
+  document.documentElement.style.setProperty('--app-height', `${viewportHeight}px`)
+}
+
+const setupViewportHeight = () => {
+  const mediaQuery = window.matchMedia('(max-width: 768px)')
+
+  const applyHeight = () => {
+    if (mediaQuery.matches) {
+      updateAppHeight()
+      return
+    }
+
+    document.documentElement.style.removeProperty('--app-height')
+  }
+
+  const handleResize = () => {
+    const widthDelta = Math.abs(window.innerWidth - lastViewportWidth)
+
+    // Ignore mobile browser chrome changes that only affect viewport height.
+    if (widthDelta < 80) {
+      return
+    }
+
+    applyHeight()
+  }
+
+  applyHeight()
+
+  window.addEventListener('resize', handleResize, { passive: true })
+  window.addEventListener('orientationchange', applyHeight, { passive: true })
+  mediaQuery.addEventListener('change', applyHeight)
+
+  return () => {
+    window.removeEventListener('resize', handleResize)
+    window.removeEventListener('orientationchange', applyHeight)
+    mediaQuery.removeEventListener('change', applyHeight)
+    document.documentElement.style.removeProperty('--app-height')
+  }
+}
+
 onMounted(() => {
   startAutoScroll()
+  removeViewportHeightListeners = setupViewportHeight()
 })
 
 onUnmounted(() => {
   if (autoScrollInterval) {
     clearInterval(autoScrollInterval)
   }
+
+  removeViewportHeightListeners?.()
 })
 </script>
 
 <style>
 /* Estilos globales sin scoped para afectar html y body */
+:root {
+  --app-height: 100vh;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -891,7 +943,6 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  will-change: transform, filter, opacity;
 }
 
 /* Announcement Button enhanced */
@@ -908,23 +959,15 @@ html, body {
   font-weight: 400;
   letter-spacing: 0.08em;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   text-decoration: none;
-  will-change: transform, box-shadow, border-color;
   position: relative;
   overflow: hidden;
-}
-
-.announcement-button:hover {
 }
 
 .announcement-button svg {
   transition: transform 0.3s ease;
   opacity: 0.6;
-  will-change: transform;
-}
-
-.announcement-button:hover svg {
 }
 
 .dot {
@@ -957,7 +1000,7 @@ html, body {
   color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   padding: 6px;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
   animation: bounce 2s ease-in-out infinite;
 }
 
@@ -997,7 +1040,7 @@ html, body {
   font-weight: 500;
   letter-spacing: 0.6px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 
@@ -1148,11 +1191,10 @@ html, body {
   font-weight: 300;
   color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   padding-left: 0;
   letter-spacing: 0.02em;
-  will-change: transform, color;
 }
 
 .service-item::before {
@@ -1165,9 +1207,6 @@ html, body {
   height: 0;
   background: #AFE3E8;
   transition: height 0.3s ease;
-}
-
-.service-item:hover {
 }
 
 .service-item.active {
@@ -1236,8 +1275,7 @@ html, body {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.25);
   cursor: pointer;
-  transition: all 0.3s ease;
-  will-change: transform, background;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .dot-indicator:hover {
@@ -1254,7 +1292,7 @@ html, body {
 /* Transitions */
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .fade-slide-enter-from {
@@ -1364,7 +1402,7 @@ html, body {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, width 0.3s ease, border-radius 0.3s ease;
 }
 
 .carousel-dot.active {
@@ -1378,7 +1416,7 @@ html, body {
 .slide-left-leave-active,
 .slide-right-enter-active,
 .slide-right-leave-active {
-  transition: all 0.35s ease;
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .slide-left-enter-from {
@@ -1520,7 +1558,6 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  will-change: transform, text-shadow;
 }
 
 .solution-text {
@@ -1555,8 +1592,7 @@ html, body {
   box-shadow: 
     0 25px 80px rgba(0, 0, 0, 0.6),
     0 10px 30px rgba(0, 0, 0, 0.4);
-  transition: all 0.4s ease;
-  will-change: transform, box-shadow;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
   cursor: pointer;
 }
 
@@ -1580,7 +1616,7 @@ html, body {
     to bottom,
     rgba(255, 255, 255, 0.35) 0%,
     rgba(255, 255, 255, 0.55) 50%,
-    rgba(255, 230, 200, 0.75) 100%
+    rgba(255, 255, 255, 0.8) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1605,17 +1641,15 @@ html, body {
   padding: 0.85rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 0.85rem;
-  transition: all 0.3s ease;
-  will-change: transform;
+  transition: transform 0.3s ease, border-color 0.3s ease;
   cursor: pointer;
 }
 
 .feature-icon {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.4);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, color 0.3s ease;
   flex-shrink: 0;
-  will-change: transform, color;
 }
 
 .feature-item span:last-child {
@@ -1749,8 +1783,7 @@ html, body {
   padding: 48px 36px;
   cursor: pointer;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, box-shadow;
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Border glow effect on hover */
@@ -1783,7 +1816,7 @@ html, body {
 .card-icon {
   color: rgba(255, 255, 255, 0.4);
   margin-bottom: 24px;
-  transition: all 0.4s ease;
+  transition: color 0.4s ease, transform 0.4s ease;
 }
 
 .use-case-card:hover .card-icon {
@@ -2090,7 +2123,7 @@ html, body {
   letter-spacing: -0.02em;
   background: linear-gradient(
     to right,
-    rgba(255, 240, 220, 1) 0%,
+    rgba(255, 255, 255, 0.9) 0%,
     rgba(255, 255, 255, 0.9) 30%,
     rgba(255, 255, 255, 0.7) 60%,
     rgba(255, 255, 255, 0.5) 100%
@@ -2176,8 +2209,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  will-change: transform, box-shadow, border-color;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   cursor: pointer;
 }
 
@@ -2191,7 +2223,7 @@ html, body {
   height: 6px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .timeline-item:hover .dot-inner {
@@ -2235,8 +2267,7 @@ html, body {
   text-align: left;
   left: 50%;
   transform: translateX(-50%);
-  transition: all 0.3s ease;
-  will-change: transform, box-shadow;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
 
@@ -2386,9 +2417,8 @@ html, body {
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 400;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
   min-width: 220px;
-  will-change: transform, box-shadow, border-color;
   cursor: pointer;
 }
 
@@ -2406,8 +2436,7 @@ html, body {
   font-size: 0.75rem;
   opacity: 0;
   transform: translate(-4px, 4px);
-  transition: all 0.3s ease;
-  will-change: transform;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .contact-btn:hover .contact-btn-arrow {
@@ -2512,7 +2541,6 @@ html, body {
   width: 10rem;
   margin-bottom: 16px;
   opacity: 0.7;
-  will-change: transform, opacity;
   cursor: pointer;
 }
 
@@ -2529,7 +2557,6 @@ html, body {
   letter-spacing: 0.15em;
   color: rgba(255, 255, 255, 0.4);
   margin-bottom: 20px;
-  will-change: opacity, letter-spacing;
 }
 
 .footer-links {
@@ -2547,7 +2574,6 @@ html, body {
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   transition: color 0.2s ease, transform 0.2s ease;
-  will-change: transform, color;
   display: inline-block;
   cursor: pointer;
 }
@@ -2646,6 +2672,7 @@ html, body {
     width: 100vw;
     height: 130vh;
     opacity: 0.6;
+    filter: blur(12px);
   }
   
   .technology-container {
@@ -2679,6 +2706,7 @@ html, body {
       rgba(255, 255, 255, 0.4) 50%,
       rgba(175, 227, 232, 0.6) 100%
     );
+    will-change: transform;
   }
   
   .timeline-items {
@@ -2708,6 +2736,7 @@ html, body {
     bottom: auto;
     transform: none;
     max-width: 100%;
+    will-change: auto;
   }
   
   .item-top .timeline-card,
@@ -2721,7 +2750,7 @@ html, body {
   
   .timeline-item:hover .timeline-card {
     transform: none;
-    top: 30%;
+    top: 0;
   }
 
   .deco-left,
@@ -2794,10 +2823,13 @@ html, body {
 }
 
 @media (max-width: 768px) {
+  #app {
+    min-height: var(--app-height, 100svh);
+  }
+
   .hero {
     padding-top: 100px;
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: var(--app-height, 100svh);
     align-items: flex-start;
     padding-bottom: 100px;
   }
@@ -2807,8 +2839,7 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: calc(100vh - 200px);
-    min-height: calc(100dvh - 200px);
+    min-height: calc(var(--app-height, 100svh) - 200px);
   }
   
   .hero-title {
@@ -2862,6 +2893,7 @@ html, body {
   .light-container {
     width: 100vw;
     right: -20%;
+    height: calc(var(--app-height, 100svh) * 1.4);
   }
   
   /* Services mobile - Carousel */
@@ -2893,6 +2925,7 @@ html, body {
   }
   
   .use-cases-section {
+    min-height: var(--app-height, 100svh);
     padding: 80px 0;
   }
   
@@ -2915,7 +2948,13 @@ html, body {
   
   /* Contact responsive */
   .contact-section {
+    min-height: var(--app-height, 100svh);
     padding: 100px 0 60px;
+  }
+
+  .solution-section,
+  .technology-section {
+    min-height: var(--app-height, 100svh);
   }
   
   .contact-container {

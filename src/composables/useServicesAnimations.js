@@ -1,42 +1,29 @@
 import { onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { addHoverListeners, afterNextPaint, isMobileLayout, isVisibleElement } from './animationUtils'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function useServicesAnimations() {
-  let animations = []
+  let context
+  let cancelSetup = () => {}
+  const cleanups = []
 
   const animateServicesSection = () => {
+    const desktopWrapper = document.querySelector('.desktop-services')
+    if (!isVisibleElement(desktopWrapper) || isMobileLayout()) return
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: '.services-section',
-        start: 'top 60%',
-        end: 'top 20%',
-        scrub: 1,
-        markers: false,
+        start: 'top 72%',
+        once: true,
       },
     })
 
-    // Animar el header y label
     tl.fromTo(
       '.nav-label',
-      {
-        opacity: 0,
-        x: -50,
-      },
-      {
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-      },
-      0
-    )
-
-    // Animar items de la lista con stagger
-    tl.fromTo(
-      '.service-item',
       {
         opacity: 0,
         x: -40,
@@ -44,129 +31,140 @@ export function useServicesAnimations() {
       {
         opacity: 1,
         x: 0,
-        duration: 0.6,
-        stagger: 0.08,
+        duration: 0.55,
         ease: 'power2.out',
       },
-      0.2
+      0
     )
-
-    // Animar el contenido principal
-    tl.fromTo(
-      '.service-detail',
-      {
-        opacity: 0,
-        x: 50,
-      },
-      {
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-      },
-      0.3
-    )
-
-    // Animar los dots de navegación
-    tl.fromTo(
-      '.dot-indicator',
-      {
-        opacity: 0,
-        scale: 0.3,
-      },
-      {
-        opacity: 1,
-        scale: 1,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'back.out',
-      },
-      0.4
-    )
-
-    animations.push(tl)
-  }
-
-  const animateServiceHover = () => {
-    // No hay efectos de hover
+      .fromTo(
+        '.service-item',
+        {
+          opacity: 0,
+          x: -36,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          stagger: 0.07,
+          ease: 'power2.out',
+        },
+        0.12
+      )
+      .fromTo(
+        '.service-detail',
+        {
+          opacity: 0,
+          x: 40,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.65,
+          ease: 'power2.out',
+        },
+        0.22
+      )
+      .fromTo(
+        '.dot-indicator',
+        {
+          opacity: 0,
+          scale: 0.5,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.45,
+          stagger: 0.08,
+          ease: 'back.out(1.6)',
+        },
+        0.28
+      )
   }
 
   const animateMobileCarousel = () => {
-    // Animar el carousel en mobile
+    const carousel = document.querySelector('.mobile-services-carousel')
+    if (!isVisibleElement(carousel) || !isMobileLayout()) return
+
     gsap.fromTo(
-      '.mobile-services-carousel',
+      carousel,
       {
         opacity: 0,
-        y: 40,
+        y: 36,
       },
       {
         opacity: 1,
         y: 0,
-        scrollTrigger: {
-          trigger: '.mobile-services-carousel',
-          start: 'top 80%',
-          markers: false,
-        },
-        duration: 0.8,
+        duration: 0.65,
         ease: 'power2.out',
+        scrollTrigger: {
+          trigger: carousel,
+          start: 'top 82%',
+          once: true,
+        },
       }
     )
 
-    // Animar los dots del carousel
     gsap.fromTo(
       '.carousel-dot',
       {
         opacity: 0,
-        scale: 0,
+        scale: 0.6,
       },
       {
         opacity: 1,
         scale: 1,
+        duration: 0.45,
+        stagger: 0.07,
+        ease: 'back.out(1.5)',
         scrollTrigger: {
           trigger: '.carousel-dots',
-          start: 'top 85%',
-          markers: false,
+          start: 'top 88%',
+          once: true,
         },
-        duration: 0.6,
-        stagger: 0.08,
-        ease: 'back.out',
       }
     )
   }
 
   const animateDots = () => {
-    const dots = document.querySelectorAll('.dot-indicator, .carousel-dot')
-    
-    dots.forEach(dot => {
-      dot.addEventListener('mouseenter', () => {
-        gsap.to(dot, {
-          scale: 1.3,
-          duration: 0.3,
-          ease: 'power2.out',
-        })
-      })
+    const dots = Array.from(document.querySelectorAll('.dot-indicator, .carousel-dot'))
 
-      dot.addEventListener('mouseleave', () => {
-        gsap.to(dot, {
-          scale: dot.classList.contains('active') ? 1.2 : 1,
-          duration: 0.3,
-          ease: 'power2.out',
-        })
-      })
-    })
+    cleanups.push(
+      addHoverListeners(
+        dots,
+        (dot) => {
+          gsap.to(dot, {
+            scale: 1.3,
+            duration: 0.2,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
+        },
+        (dot) => {
+          gsap.to(dot, {
+            scale: dot.classList.contains('active') ? 1.2 : 1,
+            duration: 0.2,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
+        }
+      )
+    )
   }
 
   onMounted(() => {
-    setTimeout(() => {
-      animateServicesSection()
-      animateServiceHover()
-      animateMobileCarousel()
-      animateDots()
-    }, 300)
+    cancelSetup = afterNextPaint(() => {
+      context = gsap.context(() => {
+        animateServicesSection()
+        animateMobileCarousel()
+        animateDots()
+      })
+    })
   })
 
   onUnmounted(() => {
-    animations.forEach(anim => anim.kill())
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+    cancelSetup()
+    cleanups.forEach((cleanup) => cleanup())
+    context?.revert()
   })
 }

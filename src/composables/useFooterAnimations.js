@@ -1,11 +1,14 @@
 import { onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { addHoverListeners, afterNextPaint, isMobileLayout, isVisibleElement } from './animationUtils'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function useFooterAnimations() {
-  let animations = []
+  let context
+  let cancelSetup = () => {}
+  const cleanups = []
 
   const animateFooterLight = () => {
     // Animar el fondo de luz del footer
@@ -16,13 +19,11 @@ export function useFooterAnimations() {
       },
       {
         opacity: 1,
-        scrollTrigger: {
-          trigger: '.main-footer',
-          start: 'top 80%',
-          end: 'top 20%',
-          scrub: 1,
-          markers: false,
-        },
+          scrollTrigger: {
+            trigger: '.main-footer',
+            start: 'top 82%',
+            once: true,
+          },
         duration: 0.8,
       }
     )
@@ -32,8 +33,8 @@ export function useFooterAnimations() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: '.footer-brand',
-        start: 'top 85%',
-        markers: false,
+        start: 'top 88%',
+        once: true,
       },
     })
 
@@ -122,9 +123,9 @@ export function useFooterAnimations() {
   }
 
   const animateFooterLinks = () => {
-    const links = document.querySelectorAll('.footer-links li')
+    const linkItems = document.querySelectorAll('.footer-links li')
 
-    links.forEach((li, index) => {
+    linkItems.forEach((li) => {
       const link = li.querySelector('a')
       
       gsap.fromTo(
@@ -147,25 +148,33 @@ export function useFooterAnimations() {
       )
 
       // Hover effect en links
-      if (link) {
-        link.addEventListener('mouseenter', () => {
+      if (!link) return
+    })
+
+    const links = Array.from(document.querySelectorAll('.footer-links li a'))
+
+    cleanups.push(
+      addHoverListeners(
+        links,
+        (link) => {
           gsap.to(link, {
             x: 5,
             color: '#AFE3E8',
             duration: 0.2,
             ease: 'power2.out',
+            overwrite: 'auto',
           })
-        })
-
-        link.addEventListener('mouseleave', () => {
+        },
+        (link) => {
           gsap.to(link, {
             x: 0,
             color: 'rgba(255, 255, 255, 0.6)',
             duration: 0.2,
+            overwrite: 'auto',
           })
-        })
-      }
-    })
+        }
+      )
+    )
   }
 
   const animateFooterBottom = () => {
@@ -190,39 +199,24 @@ export function useFooterAnimations() {
     )
   }
 
-  const setupFooterLineAnimation = () => {
-    // Efecto de línea decorativa en el footer (si existe)
-    const footerLines = document.querySelectorAll('.footer-column::before')
-    
-    if (footerLines.length > 0) {
-      gsap.to('.footer-column::before', {
-        scrollTrigger: {
-          trigger: '.main-footer',
-          start: 'top 80%',
-          end: 'top 20%',
-          scrub: 1,
-          markers: false,
-        },
-        opacity: 1,
-        duration: 0.8,
-      })
-    }
-  }
-
   onMounted(() => {
-    setTimeout(() => {
-      animateFooterLight()
-      animateFooterBrand()
-      animateFooterColumns()
-      animateFooterTitles()
-      animateFooterLinks()
-      animateFooterBottom()
-      setupFooterLineAnimation()
-    }, 300)
+    cancelSetup = afterNextPaint(() => {
+      context = gsap.context(() => {
+        if (!isVisibleElement(document.querySelector('.main-footer'))) return
+
+        animateFooterLight()
+        animateFooterBrand()
+        animateFooterColumns()
+        animateFooterTitles()
+        animateFooterLinks()
+        animateFooterBottom()
+      })
+    })
   })
 
   onUnmounted(() => {
-    animations.forEach(anim => anim.kill())
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+    cancelSetup()
+    cleanups.forEach((cleanup) => cleanup())
+    context?.revert()
   })
 }
