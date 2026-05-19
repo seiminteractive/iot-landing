@@ -1,4 +1,5 @@
 import { onMounted, onUnmounted } from 'vue'
+import { isPrerendering } from './animationUtils'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { addHoverListeners, afterNextPaint, isMobileLayout, isVisibleElement } from './animationUtils'
@@ -331,6 +332,7 @@ export function useSolutionAnimations() {
   }
 
   onMounted(() => {
+    if (isPrerendering()) return
     cancelSetup = afterNextPaint(() => {
       context = gsap.context(() => {
         animateSolutionSection()

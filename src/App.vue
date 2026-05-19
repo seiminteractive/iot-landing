@@ -11,14 +11,17 @@
       </div>
 
       <div class="hero-content">
-        <h1 class="hero-title">
+        <h1 class="hero-kicker">
+          Plataforma IoT para la Industria 4.0
+        </h1>
+        <p class="hero-title">
           La nueva era<br>
           de la Industria Inteligente
-        </h1>
+        </p>
         
         <a href="#solution" class="announcement-button">
           <span class="dot"></span>
-          IoT Industrial · Conocé Más
+          Conocé nuestra Solución IoT
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -147,8 +150,8 @@
       <div class="solution-container">
         <!-- Column 1 - Overview / Descripción -->
         <div class="solution-column solution-column-left">
-          <span class="solution-label">OVERVIEW</span>
-          <h3 class="solution-column-title">La Solución</h3>
+          <span class="solution-label">NUESTRA SOLUCIÓN IOT</span>
+          <h3 class="solution-column-title">Solución IoT Industrial a Medida</h3>
           <p class="solution-text">
             Diseñamos e implementamos soluciones de telemetría industrial que conectan los sistemas de planta con la nube de forma segura y confiable.
           </p>
@@ -168,7 +171,7 @@
 
         <!-- Column 2 - Núcleo / Plataforma -->
         <div class="solution-column solution-column-center">
-          <span class="solution-label">BASE OPERATIVA</span>
+          <span class="solution-label">PLATAFORMA IOT</span>
           <h2 class="solution-main-title">Plataforma de Control Industrial</h2>
           
           <div class="solution-device">
@@ -187,8 +190,8 @@
 
         <!-- Column 3 - Overview / Capacidades -->
         <div class="solution-column">
-          <span class="solution-label">OVERVIEW</span>
-          <h3 class="solution-column-title">Capacidades Clave</h3>
+          <span class="solution-label">CAPACIDADES IOT</span>
+          <h3 class="solution-column-title">Capacidades de la Plataforma</h3>
           
           <ul class="solution-features">
             <li class="feature-item">
@@ -228,9 +231,9 @@
     <section id="use-cases" class="use-cases-section">
       <div class="use-cases-container">
         <div class="use-cases-header">
-          <span class="use-cases-label">CASOS DE USO</span>
-          <h2 class="use-cases-title">Aplicaciones Industriales</h2>
-          <p class="use-cases-subtitle">Soluciones diseñadas para resolver desafíos operativos reales.</p>
+          <span class="use-cases-label">APLICACIONES IOT</span>
+          <h2 class="use-cases-title">Casos de Uso de IoT en la Industria</h2>
+          <p class="use-cases-subtitle">Soluciones IoT para monitoreo de producción, mantenimiento predictivo y eficiencia operativa en plantas industriales.</p>
         </div>
 
         <!-- Desktop Grid -->
@@ -258,8 +261,8 @@
                   <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h3 class="card-title">Eficiencia Operativa</h3>
-              <p class="card-description">Indicadores clave para optimizar el desempeño industrial.</p>
+              <h3 class="card-title">Eficiencia Operativa y OEE</h3>
+              <p class="card-description">Indicadores clave (OEE, KPIs) para optimizar el desempeño industrial.</p>
             </div>
           </div>
 
@@ -273,8 +276,8 @@
                   <path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h3 class="card-title">Continuidad Operativa</h3>
-              <p class="card-description">Supervisión constante para asegurar estabilidad y previsibilidad.</p>
+              <h3 class="card-title">Continuidad Operativa y Alertas en Tiempo Real</h3>
+              <p class="card-description">Supervisión 24/7 con alertas tempranas para asegurar estabilidad y previsibilidad.</p>
             </div>
           </div>
 
@@ -287,8 +290,8 @@
                   <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h3 class="card-title">Mantenimiento Inteligente</h3>
-              <p class="card-description">Anticipación de fallas basada en datos operativos.</p>
+              <h3 class="card-title">Mantenimiento Predictivo con IA</h3>
+              <p class="card-description">Anticipación de fallas basada en datos operativos y modelos de IA predictivos.</p>
             </div>
           </div>
 
@@ -319,8 +322,8 @@
                   <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
                 </svg>
               </div>
-              <h3 class="card-title">Inteligencia Artificial Aplicada</h3>
-              <p class="card-description">Insights automáticos para decisiones estratégicas.</p>
+              <h3 class="card-title">Inteligencia Artificial Aplicada a la Industria</h3>
+              <p class="card-description">Insights automáticos, análisis predictivo y detección de patrones para decisiones estratégicas.</p>
             </div>
           </div>
         </div>
@@ -584,44 +587,44 @@ const services = [
   {
     name: 'Integración Industrial',
     title: 'Integración Industrial',
-    mainDescription: 'Conectamos PLCs y sistemas industriales existentes de forma segura y no invasiva. Trabajamos con distintos protocolos y arquitecturas, respetando la operación actual y evitando interrupciones en planta.',
-    secondaryDescription: 'La integración se adapta a cada entorno industrial, permitiendo capturar datos críticos desde el origen.'
+    mainDescription: 'Conectamos PLCs (Siemens, Allen Bradley, Rockwell) y sistemas industriales existentes de forma segura y no invasiva. Trabajamos con protocolos OPC-UA, MQTT y Modbus, respetando la operación y evitando interrupciones en planta.',
+    secondaryDescription: 'La integración IoT se adapta a cada entorno industrial, capturando datos críticos desde el origen.'
   },
   {
     name: 'Arquitectura Cloud',
-    title: 'Arquitectura Cloud',
-    mainDescription: 'Diseñamos y operamos arquitecturas cloud robustas, escalables y seguras para entornos industriales. Cada solución se construye según la criticidad de la operación.',
-    secondaryDescription: 'La infraestructura está preparada para crecer junto a la planta, manteniendo estabilidad y control.'
+    title: 'Arquitectura Cloud Industrial',
+    mainDescription: 'Diseñamos y operamos arquitecturas cloud robustas, escalables y seguras para entornos industriales. Cada solución IoT se construye según la criticidad de la operación.',
+    secondaryDescription: 'La infraestructura cloud industrial está preparada para crecer junto a la planta, manteniendo estabilidad y control.'
   },
   {
     name: 'Visualización',
-    title: 'Visualización e Inteligencia Operativa',
-    mainDescription: 'Creamos dashboards claros, enfocados en métricas relevantes para cada rol y proceso. La información se presenta de forma simple, priorizando la toma de decisiones.',
-    secondaryDescription: 'No mostramos datos por mostrar: estructuramos la información para reflejar el estado real de la operación.'
+    title: 'Dashboards y Visualización',
+    mainDescription: 'Creamos dashboards industriales claros con KPIs, OEE y métricas en tiempo real, enfocados en cada rol y proceso. La información se presenta de forma simple, priorizando la toma de decisiones.',
+    secondaryDescription: 'No mostramos datos por mostrar: estructuramos la información para reflejar el estado real de la operación industrial.'
   },
   {
     name: 'Inteligencia Artificial',
     title: 'Inteligencia Artificial Aplicada',
-    mainDescription: 'Incorporamos inteligencia artificial para analizar patrones, detectar anomalías y generar insights sobre los datos industriales.',
-    secondaryDescription: 'El objetivo no es reemplazar decisiones humanas, sino potenciar el criterio operativo con información contextualizada.'
+    mainDescription: 'Incorporamos inteligencia artificial y machine learning para analizar patrones, detectar anomalías y generar insights sobre los datos industriales y de producción.',
+    secondaryDescription: 'El objetivo no es reemplazar decisiones humanas, sino potenciar el criterio operativo con información contextualizada por IA.'
   },
   {
     name: 'Seguridad',
-    title: 'Seguridad Industrial y de Datos',
-    mainDescription: 'La seguridad es un pilar central de cada implementación. Aplicamos buenas prácticas de aislamiento, control de accesos y protección de datos industriales.',
+    title: 'Ciberseguridad OT',
+    mainDescription: 'La ciberseguridad OT es un pilar central de cada implementación IoT. Aplicamos aislamiento de red, control de accesos y protección de datos industriales con buenas prácticas IEC 62443.',
     secondaryDescription: 'Cada entorno es privado y diseñado específicamente para el cliente, evitando exposiciones innecesarias.'
   },
   {
     name: 'Soporte y Operación',
-    title: 'Soporte y Operación Continua',
-    mainDescription: 'Operamos y monitoreamos la solución de forma continua, asegurando disponibilidad y correcto funcionamiento.',
-    secondaryDescription: 'La operación no termina en la implementación: es un proceso vivo.'
+    title: 'Soporte y Operación 24/7',
+    mainDescription: 'Operamos y monitoreamos la plataforma IoT de forma continua 24/7, asegurando disponibilidad, performance y correcto funcionamiento de la solución.',
+    secondaryDescription: 'La operación no termina en la implementación: es un proceso vivo con soporte técnico continuo.'
   },
   {
     name: 'Consultoría y Evolución',
-    title: 'Consultoría y Evolución',
-    mainDescription: 'Acompañamos a las empresas en la evolución de su madurez digital industrial. Analizamos procesos, métricas y necesidades futuras.',
-    secondaryDescription: 'La plataforma y el servicio evolucionan junto a la operación y al negocio.'
+    title: 'Consultoría Industria 4.0',
+    mainDescription: 'Acompañamos a empresas argentinas en la evolución de su madurez digital y transformación hacia la Industria 4.0. Analizamos procesos, métricas y roadmap futuro.',
+    secondaryDescription: 'La plataforma IoT y el servicio evolucionan junto a la operación y al negocio.'
   }
 ]
 
@@ -668,18 +671,18 @@ const useCases = [
   },
   {
     icon: 'pi-bolt',
-    title: 'Eficiencia Operativa',
-    description: 'Indicadores clave para optimizar el desempeño industrial. Identificación de cuellos de botella y oportunidades de mejora continua.'
+    title: 'Eficiencia Operativa y OEE',
+    description: 'Indicadores clave (OEE, KPIs) para optimizar el desempeño industrial. Identificación de cuellos de botella y oportunidades de mejora continua.'
   },
   {
     icon: 'pi-clock',
-    title: 'Continuidad Operativa',
-    description: 'Supervisión constante para asegurar estabilidad y previsibilidad. Alertas tempranas y monitoreo 24/7 de variables críticas.'
+    title: 'Continuidad Operativa y Alertas en Tiempo Real',
+    description: 'Supervisión 24/7 con alertas tempranas para asegurar estabilidad y previsibilidad de variables críticas.'
   },
   {
     icon: 'pi-wrench',
-    title: 'Mantenimiento Inteligente',
-    description: 'Anticipación de fallas basada en datos operativos. Reducción de paradas no planificadas y optimización de recursos de mantenimiento.'
+    title: 'Mantenimiento Predictivo con IA',
+    description: 'Anticipación de fallas basada en datos operativos y modelos de IA predictivos. Reducción de paradas no planificadas y optimización de recursos de mantenimiento.'
   },
   {
     icon: 'pi-globe',
@@ -688,8 +691,8 @@ const useCases = [
   },
   {
     icon: 'pi-sparkles',
-    title: 'Inteligencia Artificial',
-    description: 'Insights automáticos para decisiones estratégicas. Análisis predictivo y detección de patrones en grandes volúmenes de datos.'
+    title: 'Inteligencia Artificial Aplicada a la Industria',
+    description: 'Insights automáticos, análisis predictivo y detección de patrones en grandes volúmenes de datos para decisiones estratégicas.'
   }
 ]
 
@@ -925,6 +928,27 @@ html, body {
   text-align: left;
   max-width: 1200px;
   padding: 0 60px;
+}
+
+.hero-kicker {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0 0 24px 0;
+  line-height: 1.4;
+  max-width: 640px;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.45) 30%,
+    rgba(255, 255, 255, 0.7) 60%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 .hero-title {
@@ -2840,6 +2864,12 @@ html, body {
     flex-direction: column;
     justify-content: center;
     min-height: calc(var(--app-height, 100svh) - 200px);
+  }
+
+  .hero-kicker {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    margin-bottom: 18px;
   }
   
   .hero-title {

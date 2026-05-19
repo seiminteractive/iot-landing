@@ -1,3 +1,7 @@
+export function isPrerendering() {
+  return typeof window !== 'undefined' && window.__PRERENDER__ === true
+}
+
 export const MOBILE_LAYOUT_QUERY = '(max-width: 768px)'
 export const FINE_POINTER_QUERY = '(hover: hover) and (pointer: fine)'
 

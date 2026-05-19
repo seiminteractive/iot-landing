@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+Disallow: /budget/
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://seiminteractive.io/sitemap.xml
+Host: https://seiminteractive.io

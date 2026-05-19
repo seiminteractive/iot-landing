@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs",
+    "build:no-prerender": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "@vitejs/plugin-vue": "^5.0.0",
     "autoprefixer": "^10.4.23",
     "esbuild": "^0.27.2",
+    "puppeteer": "^25.0.4",
     "shadcn-vue": "^2.4.3",
     "tailwindcss": "^4.1.18",
     "vite": "^5.0.0"

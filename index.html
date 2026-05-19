@@ -1,13 +1,236 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="/src/assets/MARCA-06.png" type="image/x-icon">
-  <title>Seim Interactive IoT</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- Primary SEO -->
+  <title>Soluciones IoT Argentina | Industria 4.0 y IoT Industrial — Seim Interactive</title>
+  <meta name="description" content="Seim Interactive: soluciones IoT en Argentina para la Industria 4.0. Integración de PLCs, arquitectura cloud, dashboards industriales, IA aplicada y ciberseguridad OT. Conectamos tu planta y convertimos datos en decisiones.">
+  <meta name="keywords" content="soluciones IoT Argentina, IoT industrial Argentina, Industria 4.0 Argentina, integración PLC, SCADA cloud, dashboards industriales, monitoreo de producción, mantenimiento predictivo, inteligencia artificial industrial, ciberseguridad OT, Seim Interactive, plataforma IoT, transformación digital industrial">
+  <meta name="author" content="Seim Interactive">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <meta name="bingbot" content="index, follow">
+  <meta name="rating" content="general">
+  <meta name="revisit-after" content="7 days">
+
+  <!-- Geo / Localización Argentina -->
+  <meta name="geo.region" content="AR">
+  <meta name="geo.placename" content="Argentina">
+  <meta name="geo.position" content="-34.603722;-58.381592">
+  <meta name="ICBM" content="-34.603722, -58.381592">
+  <meta name="language" content="Spanish">
+
+  <!-- Canonical & hreflang -->
+  <link rel="canonical" href="https://seiminteractive.io/">
+  <link rel="alternate" href="https://seiminteractive.io/" hreflang="es-AR">
+  <link rel="alternate" href="https://seiminteractive.io/" hreflang="es">
+  <link rel="alternate" href="https://seiminteractive.io/" hreflang="x-default">
+
+  <!-- Open Graph (Facebook / LinkedIn / WhatsApp) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Seim Interactive">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:title" content="Soluciones IoT Argentina | Industria 4.0 — Seim Interactive">
+  <meta property="og:description" content="Conectamos tu planta con IoT industrial: PLCs, cloud, dashboards, IA y ciberseguridad. Soluciones IoT a medida en Argentina.">
+  <meta property="og:url" content="https://seiminteractive.io/">
+  <meta property="og:image" content="https://seiminteractive.io/og-image.jpg">
+  <meta property="og:image:secure_url" content="https://seiminteractive.io/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Seim Interactive — Soluciones IoT Industriales en Argentina">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Soluciones IoT Argentina | Seim Interactive">
+  <meta name="twitter:description" content="Plataforma IoT industrial: integración PLC, cloud, dashboards, IA y ciberseguridad OT. Industria 4.0 en Argentina.">
+  <meta name="twitter:image" content="https://seiminteractive.io/og-image.jpg">
+  <meta name="twitter:image:alt" content="Seim Interactive — Soluciones IoT Industriales">
+
+  <!-- PWA / Theme -->
+  <meta name="theme-color" content="#000000">
+  <meta name="application-name" content="Seim Interactive">
+  <meta name="apple-mobile-web-app-title" content="Seim Interactive">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Icons -->
+  <link rel="icon" href="/src/assets/MARCA-06.png" type="image/png">
+  <link rel="apple-touch-icon" href="/src/assets/MARCA-06.png">
+
+  <!-- Performance hints -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://www.google-analytics.com">
+
+  <!-- Structured Data: Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://seiminteractive.io/#organization",
+    "name": "Seim Interactive",
+    "alternateName": "Seim Interactive IoT",
+    "url": "https://seiminteractive.io/",
+    "logo": "https://seiminteractive.io/src/assets/MARCA-06.png",
+    "description": "Empresa argentina especializada en soluciones IoT industriales, Industria 4.0, integración de PLCs, arquitectura cloud, dashboards, inteligencia artificial aplicada y ciberseguridad OT.",
+    "foundingDate": "2020",
+    "areaServed": {
+      "@type": "Country",
+      "name": "Argentina"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "AR",
+      "addressRegion": "Buenos Aires"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "sales",
+      "availableLanguage": ["Spanish", "es-AR"],
+      "areaServed": "AR"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/seim-interactive",
+      "https://www.instagram.com/seiminteractive"
+    ]
+  }
+  </script>
+
+  <!-- Structured Data: WebSite + SearchAction -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://seiminteractive.io/#website",
+    "url": "https://seiminteractive.io/",
+    "name": "Seim Interactive — Soluciones IoT Argentina",
+    "inLanguage": "es-AR",
+    "publisher": { "@id": "https://seiminteractive.io/#organization" }
+  }
+  </script>
+
+  <!-- Structured Data: ProfessionalService (LocalBusiness para SEO local AR) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": "https://seiminteractive.io/#business",
+    "name": "Seim Interactive — Soluciones IoT Argentina",
+    "image": "https://seiminteractive.io/og-image.jpg",
+    "url": "https://seiminteractive.io/",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "AR",
+      "addressRegion": "Buenos Aires"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -34.603722,
+      "longitude": -58.381592
+    },
+    "areaServed": [
+      { "@type": "Country", "name": "Argentina" },
+      { "@type": "AdministrativeArea", "name": "CABA" },
+      { "@type": "AdministrativeArea", "name": "Buenos Aires" },
+      { "@type": "AdministrativeArea", "name": "Córdoba" },
+      { "@type": "AdministrativeArea", "name": "Santa Fe" },
+      { "@type": "AdministrativeArea", "name": "Mendoza" }
+    ],
+    "serviceType": [
+      "Soluciones IoT Industriales",
+      "Industria 4.0",
+      "Integración de PLCs",
+      "Arquitectura Cloud Industrial",
+      "Dashboards y Visualización de Datos",
+      "Inteligencia Artificial Aplicada",
+      "Ciberseguridad OT",
+      "Mantenimiento Predictivo"
+    ]
+  }
+  </script>
+
+  <!-- Structured Data: Services Catalog -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Servicios IoT Industriales — Seim Interactive",
+    "itemListElement": [
+      { "@type": "Service", "position": 1, "name": "Integración Industrial", "description": "Conectamos PLCs y sistemas industriales existentes de forma segura y no invasiva, con múltiples protocolos y arquitecturas.", "provider": { "@id": "https://seiminteractive.io/#organization" }, "areaServed": "AR" },
+      { "@type": "Service", "position": 2, "name": "Arquitectura Cloud Industrial", "description": "Arquitecturas cloud robustas, escalables y seguras para entornos industriales críticos.", "provider": { "@id": "https://seiminteractive.io/#organization" }, "areaServed": "AR" },
+      { "@type": "Service", "position": 3, "name": "Visualización e Inteligencia Operativa", "description": "Dashboards industriales claros, enfocados en métricas relevantes para cada rol y proceso.", "provider": { "@id": "https://seiminteractive.io/#organization" }, "areaServed": "AR" },
+      { "@type": "Service", "position": 4, "name": "Inteligencia Artificial Aplicada", "description": "IA para análisis de patrones, detección de anomalías y generación de insights sobre datos industriales.", "provider": { "@id": "https://seiminteractive.io/#organization" }, "areaServed": "AR" },
+      { "@type": "Service", "position": 5, "name": "Seguridad Industrial y de Datos", "description": "Aislamiento, control de accesos y protección de datos industriales con enfoque OT.", "provider": { "@id": "https://seiminteractive.io/#organization" }, "areaServed": "AR" },
+      { "@type": "Service", "position": 6, "name": "Soporte y Operación Continua", "description": "Monitoreo y operación continua de la solución IoT, garantizando disponibilidad.", "provider": { "@id": "https://seiminteractive.io/#organization" }, "areaServed": "AR" },
+      { "@type": "Service", "position": 7, "name": "Consultoría y Evolución Digital", "description": "Acompañamos la evolución de la madurez digital industrial de empresas argentinas.", "provider": { "@id": "https://seiminteractive.io/#organization" }, "areaServed": "AR" }
+    ]
+  }
+  </script>
+
+  <!-- Structured Data: FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Qué son las soluciones IoT industriales?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Las soluciones IoT industriales conectan máquinas, PLCs y sensores de planta con plataformas cloud para capturar datos en tiempo real, visualizarlos en dashboards y aplicar inteligencia artificial sobre la operación."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Por qué elegir Seim Interactive para IoT en Argentina?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Seim Interactive es una empresa argentina enfocada exclusivamente en IoT industrial: integramos PLCs sin interrumpir la operación, diseñamos arquitecturas cloud privadas por cliente y aplicamos IA contextual para potenciar decisiones operativas."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Trabajan con plantas en todo el país?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí. Brindamos soluciones IoT en toda Argentina: CABA, Buenos Aires, Córdoba, Santa Fe, Mendoza y todas las provincias, tanto on-site como de forma remota."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué incluye una implementación IoT con Seim?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Cada implementación incluye relevamiento, integración con PLCs, arquitectura cloud dedicada, dashboards a medida, capa de IA, ciberseguridad OT y soporte continuo."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <div id="app"></div>
+  <!-- Contenido SEO crítico para crawlers sin JavaScript -->
+  <noscript>
+    <h1>Soluciones IoT Argentina — Seim Interactive</h1>
+    <p>Seim Interactive es una empresa argentina especializada en <strong>soluciones IoT industriales</strong> e <strong>Industria 4.0</strong>. Conectamos plantas industriales con plataformas cloud para monitoreo en tiempo real, mantenimiento predictivo, dashboards operativos e inteligencia artificial aplicada.</p>
+    <h2>Servicios IoT Industriales</h2>
+    <ul>
+      <li>Integración Industrial — Conexión segura de PLCs y sistemas existentes.</li>
+      <li>Arquitectura Cloud Industrial — Infraestructura escalable y segura.</li>
+      <li>Visualización e Inteligencia Operativa — Dashboards a medida.</li>
+      <li>Inteligencia Artificial Aplicada — Análisis de patrones y anomalías.</li>
+      <li>Seguridad Industrial y de Datos — Ciberseguridad OT.</li>
+      <li>Soporte y Operación Continua — Monitoreo 24/7.</li>
+      <li>Consultoría y Evolución Digital — Madurez Industria 4.0.</li>
+    </ul>
+    <p>Brindamos soluciones IoT en CABA, Buenos Aires, Córdoba, Santa Fe, Mendoza y todo Argentina. Habilitá JavaScript para ver la experiencia completa.</p>
+  </noscript>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

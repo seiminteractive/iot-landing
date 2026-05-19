@@ -1,4 +1,5 @@
 import { onMounted, onUnmounted } from 'vue'
+import { isPrerendering } from './animationUtils'
 import gsap from 'gsap'
 
 const SCROLLED_BACKGROUND = 'linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(175, 227, 232, 0.03) 50%, rgba(255, 255, 255, 0.04) 100%)'
@@ -28,6 +29,7 @@ export function useNavbarScrollEffect() {
   }
 
   onMounted(() => {
+    if (isPrerendering()) return
     const header = document.querySelector('.header')
     if (!header) return
 

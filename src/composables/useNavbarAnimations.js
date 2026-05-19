@@ -1,4 +1,5 @@
 import { onMounted, onUnmounted } from 'vue'
+import { isPrerendering } from './animationUtils'
 import gsap from 'gsap'
 import { addHoverListeners, afterNextPaint, isVisibleElement } from './animationUtils'
 
@@ -146,6 +147,7 @@ export function useNavbarAnimations() {
   }
 
   onMounted(() => {
+    if (isPrerendering()) return
     cancelSetup = afterNextPaint(() => {
       context = gsap.context(() => {
         animateNavbarOnLoad()

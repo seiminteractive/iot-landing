@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://seiminteractive.io/</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="https://seiminteractive.io/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://seiminteractive.io/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://seiminteractive.io/"/>
+  </url>
+  <url>
+    <loc>https://seiminteractive.io/#services</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://seiminteractive.io/#solution</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://seiminteractive.io/#contact</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

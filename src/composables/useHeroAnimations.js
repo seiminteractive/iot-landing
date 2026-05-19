@@ -1,4 +1,5 @@
 import { onMounted, onUnmounted } from 'vue'
+import { isPrerendering } from './animationUtils'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { addHoverListeners, afterNextPaint, hasFinePointer, isMobileLayout } from './animationUtils'
@@ -14,6 +15,12 @@ export function useHeroAnimations() {
     const tl = gsap.timeline()
 
     tl.fromTo(
+      '.hero-kicker',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+      0
+    )
+    .fromTo(
       '.hero-title',
       {
         opacity: 0,
@@ -27,7 +34,7 @@ export function useHeroAnimations() {
         duration: 0.9,
         ease: 'power2.out',
       },
-      0
+      0.15
     )
       .fromTo(
         '.announcement-button',
@@ -141,6 +148,7 @@ export function useHeroAnimations() {
   }
 
   onMounted(() => {
+    if (isPrerendering()) return
     cancelSetup = afterNextPaint(() => {
       context = gsap.context(() => {
         animateHeroOnLoad()
