@@ -104,16 +104,22 @@
 
           <!-- Lista de items -->
           <div v-else-if="current.type === 'list'" class="list-items">
-            <div v-for="(item, i) in answers[current.id]" :key="i" class="list-row">
-              <span class="li-bullet">{{ i + 1 }}</span>
-              <UiInput
-                v-model="answers[current.id][i]"
-                :placeholder="`Item ${i + 1}`"
-                @keydown.enter.prevent="addItem(current)"
-              />
-              <button class="li-remove" :disabled="answers[current.id].length === 1" @click="removeItem(current, i)">
-                <X :size="16" />
-              </button>
+            <div class="list-scroll">
+              <div v-for="(item, i) in answers[current.id]" :key="i" class="list-row">
+                <span class="li-bullet">{{ i + 1 }}</span>
+                <textarea
+                  v-auto-grow
+                  rows="1"
+                  class="li-input"
+                  :value="answers[current.id][i]"
+                  :placeholder="`Item ${i + 1}`"
+                  @input="onItemInput($event, current, i)"
+                  @keydown.enter.prevent="addItem(current)"
+                />
+                <button class="li-remove" :disabled="answers[current.id].length === 1" @click="removeItem(current, i)">
+                  <X :size="16" />
+                </button>
+              </div>
             </div>
             <UiButton size="sm" variant="secondary" class="add-item" @click="addItem(current)">
               <template #icon><Plus :size="15" /></template>
@@ -231,6 +237,23 @@ function removeItem(step, i) {
   if (answers[step.id].length === 0) answers[step.id].push('')
 }
 
+// Item de lista: textarea que crece hacia abajo a medida que se escribe.
+function autoSize(el) {
+  if (!el) return
+  el.style.height = 'auto'
+  el.style.height = el.scrollHeight + 'px'
+}
+function onItemInput(e, step, i) {
+  answers[step.id][i] = e.target.value
+  autoSize(e.target)
+}
+// Solo dimensionamos al montar (contenido restaurado) y al escribir (@input).
+// Evitamos el hook `updated`: se dispara en cada re-render —p.ej. el autosave—
+// y el reflow de altura reposiciona el scroll de la lista hacia arriba.
+const vAutoGrow = {
+  mounted: (el) => autoSize(el),
+}
+
 function isComplete(step) {
   if (!step) return true
   if (!step.required) return true
@@ -303,11 +326,43 @@ async function persist(status) {
   min-height: 100vh;
   min-height: 100dvh;
   overflow: hidden;
-  background: #050506;
+  background: #030304;
 }
 
-/* Fondo: rayos cónicos enmascarados + grano + viñeta ---------------------- */
-.wiz-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: #000; }
+/* Fondo premium por capas:
+   1) gradiente de profundidad (centro-arriba iluminado → bordes negros),
+   2) dos glows aqua suaves que enmarcan el contenido,
+   3) el haz cónico del hero (solo desktop),
+   4) grano fino.
+   Sin grillas ni patrones. */
+.wiz-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 46% at 82% 4%, rgba(175, 227, 232, 0.12), transparent 60%),
+    radial-gradient(ellipse 58% 50% at 8% 98%, rgba(127, 180, 216, 0.08), transparent 66%),
+    radial-gradient(ellipse 130% 100% at 50% -12%, #0c0e11 0%, #070809 46%, #030304 100%);
+}
+/* Halo aqua muy tenue que “respira” detrás del contenido, para dar vida
+   sin ensuciar la lectura. */
+.wiz-bg::after {
+  content: '';
+  position: absolute;
+  top: -12%;
+  left: 50%;
+  width: 120vw;
+  max-width: 1100px;
+  height: 80vh;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse 50% 50% at 50% 30%, rgba(175, 227, 232, 0.07), transparent 70%);
+  animation: wiz-breathe 12s ease-in-out infinite;
+}
+@keyframes wiz-breathe {
+  50% { opacity: 0.5; transform: translateX(-50%) scale(1.06); }
+}
 
 /* Copia fiel de .light-container del hero de la landing:
    fuente de luz fuera de pantalla a la derecha, rayos cónicos blanco→aqua,
@@ -320,8 +375,8 @@ async function persist(status) {
   height: 140vh;
   display: flex;
   flex-direction: column;
-  filter: blur(20px);
-  opacity: 0.9;
+  filter: blur(24px);
+  opacity: 0.68;
   mask-image: radial-gradient(
     ellipse 120% 120% at 100% 40%,
     rgb(255, 255, 255) 0%,
@@ -396,7 +451,7 @@ async function persist(status) {
   position: relative; z-index: 1;
   width: 100%; max-width: 640px;
   margin: 0 auto;
-  padding: 40px 24px 60px;
+  padding: 40px 24px 44px;
   min-height: 100vh;
   min-height: 100dvh;
   display: flex; flex-direction: column;
@@ -438,7 +493,15 @@ async function persist(status) {
 .progress-meta { display: flex; justify-content: space-between; margin-top: 9px; font-size: 0.76rem; color: var(--text-faint); }
 
 /* Cuerpo ------------------------------------------------------------------ */
-.wiz-body { flex: 1; }
+/* El contenido de la pregunta se centra verticalmente en el espacio libre
+   entre el header y el footer, para que no quede pegado arriba. */
+.wiz-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 28px 0;
+}
 .q-num {
   display: inline-block;
   font-size: 0.82rem; font-weight: 700; letter-spacing: 0.05em;
@@ -478,17 +541,58 @@ async function persist(status) {
 .o-check { color: var(--accent); flex-shrink: 0; }
 .other-in { margin-top: 4px; }
 
-.list-items { margin-top: 32px; display: flex; flex-direction: column; gap: 10px; }
-.list-row { display: flex; align-items: center; gap: 10px; }
+.list-items { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; }
+
+/* La lista scrollea dentro de su propio contenedor: no empuja el footer. */
+.list-scroll {
+  display: flex; flex-direction: column; gap: 10px;
+  max-height: min(46vh, 440px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* aire para que el foco/scrollbar no pegue al borde */
+  padding: 2px 4px 2px 2px;
+  margin: -2px -4px -2px -2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+.list-scroll::-webkit-scrollbar { width: 8px; }
+.list-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+.list-scroll::-webkit-scrollbar-track { background: transparent; }
+
+.list-row { display: flex; align-items: flex-start; gap: 10px; }
 .li-bullet {
-  width: 24px; height: 24px; flex-shrink: 0;
+  width: 24px; height: 24px; flex-shrink: 0; margin-top: 11px;
   border-radius: 7px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
   font-size: 0.78rem; color: var(--text-faint); font-weight: 600;
 }
-.list-row > :nth-child(2) { flex: 1; }
+/* Textarea auto-expandible: el texto largo baja de línea en vez de cortarse. */
+.li-input {
+  flex: 1;
+  min-height: 46px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px; /* evita el auto-zoom de iOS */
+  line-height: 1.5;
+  padding: 11px 15px;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+.li-input::placeholder { color: var(--text-faint); }
+.li-input:hover { border-color: var(--border-strong); }
+.li-input:focus {
+  border-color: rgba(175, 227, 232, 0.55);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: var(--ring);
+}
 .li-remove {
-  width: 38px; height: 38px; flex-shrink: 0;
+  width: 38px; height: 38px; flex-shrink: 0; margin-top: 4px;
   border: 1px solid var(--border); background: transparent; color: var(--text-faint);
   border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;
   transition: all 0.15s ease;
@@ -527,16 +631,19 @@ async function persist(status) {
 .slide-prev-leave-to { opacity: 0; transform: translateX(34px); }
 
 @media (max-width: 640px) {
-  /* En mobile el haz lateral tapa el contenido: lo sacamos y usamos un
-     glow suave desde arriba, mucho más limpio. */
+  /* En mobile el haz lateral taparía el texto: lo sacamos, pero el fondo por
+     capas (profundidad + glows aqua + halo + grano) se mantiene, así queda
+     premium sin comprometer la lectura. */
   .light-container { display: none; }
   .wiz-bg {
     background:
-      radial-gradient(ellipse 130% 36% at 50% -6%, rgba(175, 227, 232, 0.13) 0%, transparent 60%),
-      #000;
+      radial-gradient(ellipse 90% 34% at 84% 2%, rgba(175, 227, 232, 0.14), transparent 62%),
+      radial-gradient(ellipse 80% 40% at 6% 100%, rgba(127, 180, 216, 0.09), transparent 68%),
+      radial-gradient(ellipse 140% 90% at 50% -10%, #0b0d10 0%, #070809 48%, #030304 100%);
   }
   .center { padding: 24px 20px; }
-  .wiz-inner { padding: 20px 20px 24px; }
+  .wiz-inner { padding: 22px 20px 26px; }
+  .wiz-body { padding: 20px 0; }
   .wiz-head { margin-bottom: 24px; }
   .intro-logo { margin-bottom: 26px; }
   .intro-title { font-size: 2.05rem; }
@@ -548,6 +655,7 @@ async function persist(status) {
   .enter-hint { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .wiz-bg::after { animation: none; }
   .slide-next-enter-active, .slide-next-leave-active,
   .slide-prev-enter-active, .slide-prev-leave-active { transition: opacity 0.2s ease; }
   .slide-next-enter-from, .slide-next-leave-to,
