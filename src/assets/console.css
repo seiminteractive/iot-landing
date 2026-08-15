@@ -1,0 +1,236 @@
+/* Estilos compartidos para el "console": brief del cliente + panel admin.
+   Hereda la identidad de la landing: negro + acento aqua (#AFE3E8).
+   Acabado tipo Apple: superficies sutiles, bordes hairline, foco suave. */
+
+/* Base global: sin esto, las rutas que no montan la landing dejan el <body>
+   con su margen y fondo por defecto (borde blanco alrededor). */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+}
+
+.console {
+  --bg: #060607;
+  --surface: #0d0d0f;
+  --surface-2: #161619;
+  --surface-3: #1e1e22;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #f5f5f7;
+  --text-dim: rgba(245, 245, 247, 0.56);
+  --text-faint: rgba(245, 245, 247, 0.3);
+  --accent: #afe3e8;
+  --accent-soft: rgba(175, 227, 232, 0.14);
+  --accent-ink: #06232a;
+  --danger: #ff7a7a;
+
+  --r-sm: 10px;
+  --r-md: 13px;
+  --r-lg: 18px;
+  --radius: 18px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px -12px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.8);
+  --ring: 0 0 0 4px rgba(175, 227, 232, 0.14);
+
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.011em;
+}
+
+.console *,
+.console *::before,
+.console *::after {
+  box-sizing: border-box;
+}
+
+.console-wrap {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.console-wrap--wide {
+  max-width: 1080px;
+}
+
+/* Tipografia -------------------------------------------------------------- */
+.c-h1 { font-size: 1.95rem; font-weight: 680; letter-spacing: -0.03em; margin: 0; }
+.c-h2 { font-size: 1.2rem; font-weight: 620; letter-spacing: -0.02em; margin: 0; }
+.c-lead { color: var(--text-dim); margin: 8px 0 0; line-height: 1.5; }
+.c-label { display: block; font-size: 0.85rem; font-weight: 590; margin-bottom: 8px; color: var(--text); }
+.c-help { color: var(--text-dim); font-size: 0.85rem; line-height: 1.45; }
+.c-muted { color: var(--text-faint); }
+
+/* Superficies ------------------------------------------------------------- */
+.c-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* Inputs ------------------------------------------------------------------ */
+.c-input,
+.c-textarea,
+.c-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.98rem;
+  padding: 13px 15px;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.c-input:hover,
+.c-textarea:hover,
+.c-select:hover { border-color: var(--border-strong); }
+.c-input:focus,
+.c-textarea:focus,
+.c-select:focus {
+  border-color: rgba(175, 227, 232, 0.55);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 4px rgba(175, 227, 232, 0.12);
+}
+.c-textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+.c-input::placeholder,
+.c-textarea::placeholder { color: var(--text-faint); }
+
+/* Select con caret propio */
+.c-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23888' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+}
+
+/* Botones ----------------------------------------------------------------- */
+.c-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 590;
+  padding: 11px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.c-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border-strong); }
+.c-btn:active { transform: translateY(0.5px); }
+.c-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.c-btn--primary {
+  background: linear-gradient(180deg, #c4edf1 0%, #a6dfe5 100%);
+  color: var(--accent-ink);
+  border-color: transparent;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 6px 20px -8px rgba(175, 227, 232, 0.5);
+}
+.c-btn--primary:hover { filter: brightness(1.04); background: linear-gradient(180deg, #cbeff2 0%, #aee2e8 100%); }
+.c-btn--ghost { border-color: transparent; background: transparent; color: var(--text-dim); }
+.c-btn--ghost:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); border-color: transparent; }
+.c-btn--danger { color: var(--danger); border-color: transparent; background: transparent; }
+.c-btn--danger:hover { background: rgba(255, 107, 107, 0.1); border-color: transparent; }
+.c-btn--sm { padding: 8px 13px; font-size: 0.84rem; border-radius: 10px; }
+
+/* Chips / badges ---------------------------------------------------------- */
+.c-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.c-badge--borrador { color: #ffd479; border-color: rgba(255, 212, 121, 0.4); }
+.c-badge--enviado { color: var(--accent); border-color: rgba(175, 227, 232, 0.4); }
+.c-badge--en_revision { color: #c9a7ff; border-color: rgba(201, 167, 255, 0.4); }
+.c-badge--cotizado { color: #7ee787; border-color: rgba(126, 231, 135, 0.4); }
+
+/* Empty states ------------------------------------------------------------ */
+.c-empty {
+  text-align: center;
+  padding: 64px 28px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.015);
+}
+.c-empty-icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 18px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--accent);
+}
+.c-empty-title { color: var(--text); font-size: 1.08rem; font-weight: 620; margin: 0 0 6px; letter-spacing: -0.02em; }
+.c-empty-text { color: var(--text-dim); margin: 0 auto; max-width: 360px; line-height: 1.5; font-size: 0.92rem; }
+.c-empty .c-btn { margin-top: 22px; }
+
+/* Layout de páginas admin ------------------------------------------------- */
+.page { width: 100%; max-width: 1000px; margin: 0 auto; padding: 40px 40px 96px; }
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+.page-title { font-size: 1.72rem; font-weight: 680; letter-spacing: -0.03em; margin: 0; line-height: 1.1; }
+.page-sub { color: var(--text-dim); margin: 7px 0 0; font-size: 0.95rem; line-height: 1.5; }
+.page-loading { display: flex; justify-content: center; padding: 90px 0; }
+@media (max-width: 720px) { .page { padding: 28px 20px 80px; } }
+
+/* Utilidades -------------------------------------------------------------- */
+.c-row { display: flex; align-items: center; gap: 12px; }
+.c-between { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.c-stack > * + * { margin-top: 16px; }
+.c-error {
+  color: var(--danger);
+  font-size: 0.9rem;
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.c-divider { height: 1px; background: var(--border); border: 0; margin: 0; }
+
+/* Spinner ----------------------------------------------------------------- */
+.c-spin {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.22);
+  border-top-color: var(--text);
+  border-radius: 50%;
+  animation: c-spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+.c-btn--primary .c-spin { border-color: rgba(6,35,42,0.3); border-top-color: var(--accent-ink); }
+@keyframes c-spin { to { transform: rotate(360deg); } }

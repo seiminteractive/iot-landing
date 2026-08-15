@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seim Interactive - Kit 4.0</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --text: #ffffff;
+      --text-08: rgba(255, 255, 255, 0.82);
+      --text-06: rgba(255, 255, 255, 0.64);
+      --text-04: rgba(255, 255, 255, 0.44);
+      --border: rgba(255, 255, 255, 0.12);
+      --accent-cyan: #afe3e8;
+      --accent-green: #06f62e;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-weight: 300;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 100% 0%, rgba(175, 227, 232, 0.08), transparent 55%),
+        radial-gradient(ellipse 60% 50% at 0% 100%, rgba(175, 227, 232, 0.04), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 72px 58px 82px;
+      min-height: 1120px;
+    }
+
+    .label {
+      display: inline-block;
+      font-size: 0.66rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--text-04);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 72px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-row img {
+      display: block;
+      width: auto;
+      opacity: 0.96;
+    }
+
+    .logo-seim {
+      height: 28px;
+    }
+
+    .logo-argentina {
+      height: 42px;
+    }
+
+    .doc-meta {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: var(--text-06);
+    }
+
+    .hero {
+      margin-bottom: 48px;
+      max-width: 710px;
+    }
+
+    h1 {
+      margin-top: 14px;
+      margin-bottom: 24px;
+      font-size: clamp(2.2rem, 5vw, 3.3rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      font-weight: 400;
+      background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 62%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-08);
+      font-size: 1.04rem;
+      margin-bottom: 16px;
+    }
+
+    .separator {
+      height: 1px;
+      border: 0;
+      margin: 38px 0;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.015);
+      padding: 36px 34px;
+      margin-bottom: 26px;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: var(--text-08);
+      margin-bottom: 14px;
+    }
+
+    .card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .urls {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .url-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.01);
+      padding: 14px 16px;
+    }
+
+    .url-item strong {
+      display: block;
+      color: var(--text);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .url-item a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      word-break: break-word;
+      font-size: 0.95rem;
+    }
+
+    .url-item a:hover {
+      text-decoration: underline;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      color: var(--text-08);
+      font-size: 0.9rem;
+      margin-top: 20px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+
+    .footer {
+      margin-top: 44px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      color: var(--text-06);
+      font-size: 0.88rem;
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 10mm;
+      }
+      body::before {
+        position: absolute;
+      }
+      .page {
+        min-height: auto;
+        padding: 30px 22px 24px;
+      }
+      a {
+        color: #c8f2f6;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding: 42px 22px 48px;
+        min-height: auto;
+      }
+      .header,
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .doc-meta {
+        text-align: left;
+      }
+      .brand-row {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="brand-row">
+        <img class="logo-seim" src="../src/assets/MARCA-06.png" alt="Seim Interactive">
+        <img class="logo-argentina" src="../src/assets/logo_argentina-azul.svg" alt="Argentina">
+      </div>
+      <div class="doc-meta">
+        <span>Seim Interactive</span>
+        <span>Presentación institucional breve</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <span class="label">Programa nacional</span>
+      <h1>Seim Interactive forma parte del Kit 4.0 del Gobierno Argentino</h1>
+      <p>
+        Acompañamos a PyMEs en su transformación digital con soluciones concretas de software, hardware e integración,
+        dentro del marco del programa Kit 4.0.
+      </p>
+      <p>
+        Nuestra propuesta está orientada a implementar resultados rápidos y medibles, con foco en eficiencia operativa,
+        trazabilidad y mejora continua.
+      </p>
+    </section>
+
+    <hr class="separator">
+
+    <section class="card">
+      <span class="label">Validación oficial</span>
+      <p>
+        Podés encontrarnos en el listado oficial de proveedores de kits de soluciones digitales del Ministerio de Economía.
+      </p>
+      <div class="urls">
+        <article class="url-item">
+          <strong>Listado oficial (búsqueda: Seim Interactive)</strong>
+          <a href="https://www.argentina.gob.ar/economia/industria-y-economia-del-conocimiento/kit-40/kits-de-soluciones-digitales?buscar=seim+interactive" target="_blank" rel="noopener noreferrer">
+            https://www.argentina.gob.ar/economia/industria-y-economia-del-conocimiento/kit-40/kits-de-soluciones-digitales?buscar=seim+interactive
+          </a>
+        </article>
+        <article class="url-item">
+          <strong>Información general del programa Kit 4.0</strong>
+          <a href="https://www.argentina.gob.ar/economia/industria-y-economia-del-conocimiento/kit-40" target="_blank" rel="noopener noreferrer">
+            https://www.argentina.gob.ar/economia/industria-y-economia-del-conocimiento/kit-40
+          </a>
+        </article>
+      </div>
+      <div class="pill">
+        <span class="dot"></span>
+        Empresa incluida en ecosistema de proveedores Kit 4.0
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Documento comercial de una página</span>
+      <span>www.seiminteractive.com</span>
+    </footer>
+  </main>
+</body>
+</html>

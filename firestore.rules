@@ -1,0 +1,43 @@
+rules_version = '2';
+
+// Reglas de seguridad para el sistema de briefs.
+//
+// Modelo (capa liviana, acorde a que los datos no son sensibles):
+//  - ADMIN = usuario logueado con email/password. Puede todo.
+//  - CLIENTE = sesion anonima. Solo puede validar su codigo y cargar SU brief.
+//    La verdadera "llave" es el codigo (su hash es el id del documento): quien
+//    conoce el codigo puede leer/escribir ese brief. No se puede listar/enumerar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // El admin entra con email/password; el cliente entra anonimo.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'password';
+    }
+
+    // Formularios: el cliente los lee para renderizar el wizard; solo el admin edita.
+    match /templates/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Codigos de acceso: el cliente solo puede leer el suyo (get por hash),
+    // nunca listar la coleccion. Alta/baja/edicion: solo admin.
+    match /clients/{id} {
+      allow get: if signedIn();
+      allow list, create, update, delete: if isAdmin();
+    }
+
+    // Respuestas: el cliente lee/escribe la suya (id = hash del codigo).
+    // Listar todas y borrar: solo admin.
+    match /responses/{id} {
+      allow get, create, update: if signedIn();
+      allow list, delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparativa de planes — MEP · Seim Interactive</title>
+<link rel="icon" href="assets/MARCA-14.png">
+<style>
+  :root {
+    --bg: #000000;
+    --text: #ffffff;
+    --accent-cyan: #AFE3E8;
+    --accent-green: #06f62e;
+    --text-08: rgba(255,255,255,0.8);
+    --text-06: rgba(255,255,255,0.6);
+    --text-04: rgba(255,255,255,0.4);
+    --text-025: rgba(255,255,255,0.25);
+    --border-sutil: rgba(255,255,255,0.08);
+    --border-medio: rgba(255,255,255,0.15);
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-weight: 300;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 100% 0%, rgba(175,227,232,0.07), transparent 55%),
+      radial-gradient(ellipse 60% 50% at 0% 100%, rgba(175,227,232,0.04), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .document {
+    position: relative;
+    z-index: 1;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 80px 60px 120px;
+  }
+
+  .page + .page {
+    margin-top: 80px;
+    padding-top: 80px;
+    border-top: 1px dashed var(--border-sutil);
+  }
+
+  .label {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-04);
+  }
+
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  .logo { height: 28px; width: auto; opacity: 0.95; }
+  .doc-meta { text-align: right; display: flex; flex-direction: column; gap: 6px; }
+  .doc-meta .doc-date { font-size: 0.85rem; color: var(--text-06); font-weight: 300; outline: none; }
+
+  .title-block { margin-bottom: 40px; }
+  .comp-title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-top: 14px;
+    margin-bottom: 14px;
+    background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 55%, var(--accent-cyan) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    outline: none;
+  }
+  .comp-sub { font-size: 0.98rem; color: var(--text-06); font-weight: 300; max-width: 720px; outline: none; }
+
+  .table-wrap { overflow-x: auto; }
+
+  table.comp {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  table.comp col.feat { width: 30%; }
+  table.comp col.plan { width: 17.5%; }
+
+  table.comp thead th {
+    vertical-align: bottom;
+    padding: 0 12px 18px;
+    border-bottom: 1px solid var(--border-medio);
+  }
+  table.comp thead th.feat-head {
+    text-align: left;
+    padding-left: 4px;
+  }
+  .plan-name { font-size: 0.95rem; font-weight: 500; color: var(--text); letter-spacing: -0.01em; line-height: 1.25; }
+  .plan-price { display: block; margin-top: 6px; font-size: 0.8rem; color: var(--accent-cyan); font-weight: 400; }
+
+  table.comp tbody td {
+    padding: 13px 12px;
+    border-bottom: 1px solid var(--border-sutil);
+    text-align: center;
+    vertical-align: middle;
+  }
+  table.comp tbody td.feat {
+    text-align: left;
+    padding-left: 4px;
+    font-size: 0.9rem;
+    color: var(--text-08);
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  tr.group td {
+    padding: 22px 4px 8px;
+    border-bottom: 1px solid var(--border-sutil);
+  }
+  tr.group .label { color: var(--accent-cyan); }
+
+  /* check / no */
+  .chk {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: rgba(6,246,46,0.14);
+    border: 1px solid rgba(6,246,46,0.45);
+    color: var(--accent-green);
+    font-size: 0.8rem;
+    line-height: 1;
+  }
+  .no { color: var(--text-025); font-size: 1rem; }
+
+  /* investment rows */
+  tr.invest td {
+    border-bottom: 1px solid var(--border-sutil);
+    padding: 16px 12px;
+    text-align: center;
+  }
+  tr.invest td.feat { text-align: left; padding-left: 4px; font-size: 0.9rem; color: var(--text-08); font-weight: 400; }
+  tr.invest .val { font-size: 1.05rem; font-weight: 400; color: var(--text); letter-spacing: -0.01em; }
+  tr.invest .val small { display:block; font-size: 0.72rem; color: var(--text-04); font-weight: 300; margin-top: 2px; letter-spacing: 0.02em; }
+  tr.invest.maint .val { font-size: 0.95rem; color: var(--text-08); }
+  tr.invest.fin td { color: var(--text-06); font-size: 0.85rem; font-weight: 300; }
+
+  .doc-footer {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border-sutil);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--text-04);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .continued { font-size: 0.7rem; color: var(--text-04); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px; }
+
+  .print-btn {
+    position: fixed;
+    bottom: 32px; right: 32px; z-index: 100;
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-medio);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.85rem; font-weight: 400; letter-spacing: 0.05em;
+    cursor: pointer;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 16px rgba(0,0,0,0.4);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .print-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent-cyan); }
+
+  @media screen and (max-width: 820px) {
+    .document { padding: 48px 20px 80px; }
+    table.comp { min-width: 720px; }
+    .doc-footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+    .print-btn { bottom: 16px; right: 16px; padding: 10px 16px; }
+  }
+
+  @media print {
+    @page { size: A4; margin: 0; }
+    html, body {
+      background: var(--bg) !important;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact;
+    }
+    body::before { display: none; }
+    .print-btn { display: none; }
+    .document { padding: 0; max-width: 100%; margin: 0; }
+
+    .page {
+      padding: 11mm 12mm;
+      page-break-after: always;
+      break-after: page;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+    .page + .page { margin-top: 0; padding-top: 11mm; border-top: 0; }
+
+    .doc-header { margin-bottom: 22px; }
+    .title-block { margin-bottom: 22px; }
+    .comp-title {
+      font-size: 1.9rem; margin-bottom: 10px;
+      background: none !important; -webkit-text-fill-color: var(--text) !important; color: var(--text) !important;
+    }
+    table.comp thead th { padding-bottom: 10px; }
+    table.comp tbody td { padding: 5px 10px; font-size: 0.82rem; }
+    table.comp tbody td.feat { font-size: 0.82rem; }
+    tr.group td { padding: 11px 4px 5px; }
+    tr.invest td { padding: 9px 10px; }
+    .chk { width: 20px; height: 20px; }
+    .doc-footer { margin-top: 10px; padding-top: 14px; }
+    [contenteditable]:focus { outline: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<main class="document">
+
+  <!-- ═════════ PÁGINA 1 ═════════ -->
+  <section class="page">
+
+  <header class="doc-header">
+    <img class="logo" src="assets/MARCA-14.png" alt="Seim Interactive">
+    <div class="doc-meta">
+      <span class="label">Comparativa de planes</span>
+      <span class="doc-date" contenteditable="true">6 de agosto de 2026</span>
+    </div>
+  </header>
+
+  <section class="title-block">
+    <span class="label">Cliente · MEP</span>
+    <h1 class="comp-title" contenteditable="true">Automatización de atención y reservas</h1>
+    <p class="comp-sub" contenteditable="true">Comparativa de funcionalidades por plan. Cada plan incluye todo lo del anterior y suma nuevas capacidades.</p>
+  </section>
+
+  <div class="table-wrap">
+    <table class="comp">
+      <colgroup>
+        <col class="feat"><col class="plan"><col class="plan"><col class="plan"><col class="plan">
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="feat-head"><span class="label">Funcionalidad</span></th>
+          <th><span class="plan-name">Base</span><span class="plan-price">USD 1.500</span></th>
+          <th><span class="plan-name">Bot IA</span><span class="plan-price">USD 4.000</span></th>
+          <th><span class="plan-name">Bot IA + Reservas</span><span class="plan-price">USD 7.000</span></th>
+          <th><span class="plan-name">Plataforma Integral</span><span class="plan-price">USD 12.000</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="group"><td colspan="5"><span class="label">Común a todos los planes</span></td></tr>
+        <tr><td class="feat">Automatización de WhatsApp</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Respuestas automáticas a preguntas frecuentes</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Panel de consultas</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Historial de conversaciones</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Registro de datos de clientes</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Capacitación y puesta en marcha</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Integración con Calendly</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td></tr>
+
+        <tr class="group"><td colspan="5"><span class="label">Inteligencia Artificial</span></td></tr>
+        <tr><td class="feat">Bot con Inteligencia Artificial</td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Respuestas naturales con IA</td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Base de conocimiento del cowork</td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Clasificación automática de consultas</td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Derivación inteligente a operador</td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Aprendizaje y optimización de respuestas</td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  </section>
+
+  <!-- ═════════ PÁGINA 2 ═════════ -->
+  <section class="page">
+
+  <p class="continued">MEP · Comparativa de planes — continuación</p>
+
+  <div class="table-wrap">
+    <table class="comp">
+      <colgroup>
+        <col class="feat"><col class="plan"><col class="plan"><col class="plan"><col class="plan">
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="feat-head"><span class="label">Funcionalidad</span></th>
+          <th><span class="plan-name">Base</span><span class="plan-price">USD 1.500</span></th>
+          <th><span class="plan-name">Bot IA</span><span class="plan-price">USD 4.000</span></th>
+          <th><span class="plan-name">Bot IA + Reservas</span><span class="plan-price">USD 7.000</span></th>
+          <th><span class="plan-name">Plataforma Integral</span><span class="plan-price">USD 12.000</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="group"><td colspan="5"><span class="label">Reservas y agenda propia</span></td></tr>
+        <tr><td class="feat">Sistema de reservas a medida</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Agenda propia integrada</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Gestión de disponibilidad de oficinas y espacios</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Configuración de horarios y reglas de reserva</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Administración de reservas (modificaciones y cancelaciones)</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Plataforma centralizada de consultas y reservas</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+
+        <tr class="group"><td colspan="5"><span class="label">Atención avanzada y administración</span></td></tr>
+        <tr><td class="feat">Chat en vivo integrado</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Múltiples operadores simultáneos</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Asignación de conversaciones entre operadores</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Estados de conversación</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Plano interactivo del cowork</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Reserva visual sobre el plano</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td class="feat">Dashboard con métricas de consultas y reservas</td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="chk">✓</span></td></tr>
+
+        <tr class="group"><td colspan="5"><span class="label">Inversión</span></td></tr>
+        <tr class="invest"><td class="feat">Desarrollo (pago único)</td>
+          <td><span class="val" contenteditable="true">USD 1.500</span></td>
+          <td><span class="val" contenteditable="true">USD 4.000</span></td>
+          <td><span class="val" contenteditable="true">USD 7.000</span></td>
+          <td><span class="val" contenteditable="true">USD 12.000</span></td></tr>
+        <tr class="invest maint"><td class="feat">Mantenimiento mensual</td>
+          <td><span class="val" contenteditable="true">USD 200<small>/mes</small></span></td>
+          <td><span class="val" contenteditable="true">USD 350<small>/mes</small></span></td>
+          <td><span class="val" contenteditable="true">USD 450<small>/mes</small></span></td>
+          <td><span class="val" contenteditable="true">USD 600<small>/mes</small></span></td></tr>
+        <tr class="invest fin"><td class="feat">Financiación del desarrollo</td>
+          <td contenteditable="true">2 pagos mensuales</td>
+          <td contenteditable="true">3 pagos mensuales</td>
+          <td contenteditable="true">3 pagos mensuales</td>
+          <td contenteditable="true">3 pagos mensuales</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="doc-footer">
+    <span>Seim Interactive · Software studio</span>
+    <span>hello@seiminteractive.io</span>
+  </footer>
+
+  </section>
+
+</main>
+
+<button class="print-btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+
+</body>
+</html>
