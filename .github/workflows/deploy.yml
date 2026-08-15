@@ -1,0 +1,110 @@
+name: Deploy a VPS
+
+# Se dispara con cada push a main (o manualmente desde la pestaña Actions).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Evita que dos deploys se pisen: si entra uno nuevo, cancela el anterior.
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: true
+
+env:
+  IMAGE: seim-front
+  CONTAINER: seiminteractive-web-iot
+  REMOTE_DIR: /srv/apps/seiminteractive-web-iot
+  HOST_PORT: 127.0.0.1:8085:80
+  HEALTH_URL: http://127.0.0.1:8085
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # El .env vive como Secret (DOTENV). Vite lo lee en build-time y embebe
+      # las VITE_* en el bundle (son claves públicas de Firebase por diseño).
+      - name: Crear .env desde Secret
+        env:
+          DOTENV: ${{ secrets.DOTENV }}
+        run: printf '%s\n' "$DOTENV" > .env
+
+      - name: Build (vite + prerender)
+        run: npm run build
+
+      - name: Definir tag de imagen
+        run: echo "IMAGE_TAG=${IMAGE}:$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+      # Imagen liviana: nginx + el dist ya buildeado (mismo enfoque que el
+      # deploy manual). Se arma en un dir staging para no heredar .dockerignore
+      # (que excluye dist/).
+      - name: Construir imagen Docker
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/seim-build && mkdir -p /tmp/seim-build
+          cp -r dist /tmp/seim-build/
+          cp nginx.conf /tmp/seim-build/
+          cd /tmp/seim-build
+          cat > Dockerfile <<'DOCKERFILE'
+          FROM nginx:alpine
+          COPY dist /usr/share/nginx/html
+          COPY nginx.conf /etc/nginx/conf.d/default.conf
+          EXPOSE 80
+          CMD ["nginx", "-g", "daemon off;"]
+          DOCKERFILE
+          docker build -t "$IMAGE_TAG" .
+          docker save -o image.tar "$IMAGE_TAG"
+
+      - name: Configurar SSH
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Copiar imagen a la VPS
+        run: |
+          scp -i ~/.ssh/deploy_key /tmp/seim-build/image.tar \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:${REMOTE_DIR}/image.tar"
+
+      - name: Cargar y reiniciar contenedor
+        run: |
+          ssh -i ~/.ssh/deploy_key "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            IMAGE_TAG="$IMAGE_TAG" \
+            CONTAINER="$CONTAINER" \
+            REMOTE_DIR="$REMOTE_DIR" \
+            HOST_PORT="$HOST_PORT" \
+            HEALTH_URL="$HEALTH_URL" \
+            bash -s <<'REMOTE'
+          set -euo pipefail
+          cd "$REMOTE_DIR"
+          docker load -i image.tar
+          docker stop "$CONTAINER" 2>/dev/null || true
+          docker rm "$CONTAINER" 2>/dev/null || true
+          docker run -d \
+            --name "$CONTAINER" \
+            --restart unless-stopped \
+            -p "$HOST_PORT" \
+            "$IMAGE_TAG"
+          sleep 2
+          echo "Healthcheck:"
+          curl -fsSI "$HEALTH_URL" | head -1
+          rm -f image.tar
+          docker image prune -f >/dev/null 2>&1 || true
+          REMOTE

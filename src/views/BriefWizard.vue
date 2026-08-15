@@ -67,44 +67,44 @@
 
       <Transition :name="transition" mode="out-in">
         <main v-if="current" :key="current.id" class="wiz-body">
-          <span class="q-num">{{ String(index + 1).padStart(2, '0') }}</span>
-          <h1 class="q-title">{{ current.question || 'Pregunta sin título' }}</h1>
-          <p v-if="current.help" class="q-help">{{ current.help }}</p>
+          <div class="wiz-body-inner">
+            <span class="q-num">{{ String(index + 1).padStart(2, '0') }}</span>
+            <h1 class="q-title">{{ current.question || 'Pregunta sin título' }}</h1>
+            <p v-if="current.help" class="q-help">{{ current.help }}</p>
 
-          <!-- Opciones -->
-          <div v-if="current.type === 'choice'" class="options">
-            <button
-              v-for="c in choices(current)"
-              :key="c.value"
-              type="button"
-              class="option"
-              :class="{ on: isSelected(current, c.value) }"
-              @click="toggleOption(current, c.value)"
-            >
-              <span class="o-key">{{ c.key }}</span>
-              <span class="o-label">{{ c.label }}</span>
-              <Check v-if="isSelected(current, c.value)" class="o-check" :size="18" />
-            </button>
-            <UiInput
-              v-if="current.allowOther && isSelected(current, OTHER)"
-              v-model="answers[current.id].other"
-              placeholder="Contanos cuál…"
-              class="other-in"
-            />
-          </div>
+            <!-- Opciones -->
+            <div v-if="current.type === 'choice'" class="options">
+              <button
+                v-for="c in choices(current)"
+                :key="c.value"
+                type="button"
+                class="option"
+                :class="{ on: isSelected(current, c.value) }"
+                @click="toggleOption(current, c.value)"
+              >
+                <span class="o-key">{{ c.key }}</span>
+                <span class="o-label">{{ c.label }}</span>
+                <Check v-if="isSelected(current, c.value)" class="o-check" :size="18" />
+              </button>
+              <UiInput
+                v-if="current.allowOther && isSelected(current, OTHER)"
+                v-model="answers[current.id].other"
+                placeholder="Contanos cuál…"
+                class="other-in"
+              />
+            </div>
 
-          <!-- Texto libre -->
-          <div v-else-if="current.type === 'text'" class="control">
-            <UiTextarea
-              v-model="answers[current.id]"
-              :rows="5"
-              placeholder="Escribí tu respuesta…"
-            />
-          </div>
+            <!-- Texto libre -->
+            <div v-else-if="current.type === 'text'" class="control">
+              <UiTextarea
+                v-model="answers[current.id]"
+                :rows="5"
+                placeholder="Escribí tu respuesta…"
+              />
+            </div>
 
-          <!-- Lista de items -->
-          <div v-else-if="current.type === 'list'" class="list-items">
-            <div class="list-scroll">
+            <!-- Lista de items -->
+            <div v-else-if="current.type === 'list'" ref="listRef" class="list-items">
               <div v-for="(item, i) in answers[current.id]" :key="i" class="list-row">
                 <span class="li-bullet">{{ i + 1 }}</span>
                 <textarea
@@ -120,11 +120,11 @@
                   <X :size="16" />
                 </button>
               </div>
+              <UiButton size="sm" variant="secondary" class="add-item" @click="addItem(current)">
+                <template #icon><Plus :size="15" /></template>
+                Agregar item
+              </UiButton>
             </div>
-            <UiButton size="sm" variant="secondary" class="add-item" @click="addItem(current)">
-              <template #icon><Plus :size="15" /></template>
-              Agregar item
-            </UiButton>
           </div>
         </main>
       </Transition>
@@ -148,7 +148,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Check, X, Plus, ListChecks, Clock, Save } from 'lucide-vue-next'
 import { ensureClientSession } from '@/services/auth'
@@ -231,10 +231,16 @@ function toggleOption(step, val) {
   }
 }
 
+const listRef = ref(null)
+
 function addItem(step) { answers[step.id].push('') }
 function removeItem(step, i) {
   answers[step.id].splice(i, 1)
   if (answers[step.id].length === 0) answers[step.id].push('')
+  // Los textareas se reutilizan por índice: al correr los valores hacia arriba,
+  // el que quedó conserva su alto viejo. Recalculamos todos con el DOM ya
+  // actualizado para que cada uno tome el tamaño de su nuevo contenido.
+  nextTick(() => listRef.value?.querySelectorAll('.li-input').forEach(autoSize))
 }
 
 // Item de lista: textarea que crece hacia abajo a medida que se escribe.
@@ -370,40 +376,34 @@ async function persist(status) {
 .light-container {
   position: absolute;
   top: -20%;
-  right: -2rem;
-  width: 90vw;
+  right: -5vw;
+  /* Ancho tal que el borde izquierdo cae en x≈0; el degradé de la máscara
+     completa a 0 mucho antes (stop 86%), así no hay corte visible. */
+  width: 105vw;
   height: 140vh;
   display: flex;
   flex-direction: column;
-  filter: blur(24px);
-  opacity: 0.68;
+  filter: blur(30px);
+  opacity: 0.7;
   mask-image: radial-gradient(
-    ellipse 120% 120% at 100% 40%,
+    ellipse 86% 120% at 100% 42%,
     rgb(255, 255, 255) 0%,
-    rgba(255, 255, 255, 0.95) 10%,
-    rgba(255, 255, 255, 0.9) 20%,
-    rgba(255, 255, 255, 0.8) 30%,
-    rgba(255, 255, 255, 0.65) 40%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0.35) 60%,
-    rgba(255, 255, 255, 0.2) 70%,
-    rgba(255, 255, 255, 0.1) 80%,
-    rgba(255, 255, 255, 0.03) 90%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(255, 255, 255, 0.92) 14%,
+    rgba(255, 255, 255, 0.72) 30%,
+    rgba(255, 255, 255, 0.46) 46%,
+    rgba(255, 255, 255, 0.24) 60%,
+    rgba(255, 255, 255, 0.09) 73%,
+    rgba(255, 255, 255, 0) 86%
   );
   -webkit-mask-image: radial-gradient(
-    ellipse 120% 120% at 100% 40%,
+    ellipse 86% 120% at 100% 42%,
     rgb(255, 255, 255) 0%,
-    rgba(255, 255, 255, 0.95) 10%,
-    rgba(255, 255, 255, 0.9) 20%,
-    rgba(255, 255, 255, 0.8) 30%,
-    rgba(255, 255, 255, 0.65) 40%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0.35) 60%,
-    rgba(255, 255, 255, 0.2) 70%,
-    rgba(255, 255, 255, 0.1) 80%,
-    rgba(255, 255, 255, 0.03) 90%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(255, 255, 255, 0.92) 14%,
+    rgba(255, 255, 255, 0.72) 30%,
+    rgba(255, 255, 255, 0.46) 46%,
+    rgba(255, 255, 255, 0.24) 60%,
+    rgba(255, 255, 255, 0.09) 73%,
+    rgba(255, 255, 255, 0) 86%
   );
 }
 .conic-light { flex: 1; width: 100%; }
@@ -452,8 +452,11 @@ async function persist(status) {
   width: 100%; max-width: 640px;
   margin: 0 auto;
   padding: 40px 24px 44px;
-  min-height: 100vh;
-  min-height: 100dvh;
+  /* Alto fijo (no min-height): el contenedor nunca crece, así el footer
+     queda siempre a la vista. El scroll vive en .wiz-body. */
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   display: flex; flex-direction: column;
 }
 
@@ -478,7 +481,7 @@ async function persist(status) {
 .intro-cta { padding: 0 26px; }
 
 /* Header ------------------------------------------------------------------ */
-.wiz-head { margin-bottom: 44px; }
+.wiz-head { flex-shrink: 0; margin-bottom: 32px; }
 .wiz-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .wiz-logo { height: 20px; width: auto; opacity: 0.9; }
 .save-state { font-size: 0.8rem; color: var(--text-dim); display: inline-flex; align-items: center; gap: 6px; }
@@ -493,15 +496,26 @@ async function persist(status) {
 .progress-meta { display: flex; justify-content: space-between; margin-top: 9px; font-size: 0.76rem; color: var(--text-faint); }
 
 /* Cuerpo ------------------------------------------------------------------ */
-/* El contenido de la pregunta se centra verticalmente en el espacio libre
-   entre el header y el footer, para que no quede pegado arriba. */
+/* Área scrolleable entre header y footer. `min-height: 0` es clave para que
+   el flex item pueda encogerse por debajo de su contenido y scrollear en vez
+   de empujar el footer. */
 .wiz-body {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 28px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
+.wiz-body::-webkit-scrollbar { width: 8px; }
+.wiz-body::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+.wiz-body::-webkit-scrollbar-track { background: transparent; }
+/* `margin: auto 0` centra el contenido cuando sobra espacio, pero —a
+   diferencia de justify-content:center— no recorta el inicio cuando el
+   contenido es más alto que el área: ahí simplemente se scrollea. */
+.wiz-body-inner { margin: auto 0; width: 100%; padding: 12px 0; }
 .q-num {
   display: inline-block;
   font-size: 0.82rem; font-weight: 700; letter-spacing: 0.05em;
@@ -541,24 +555,7 @@ async function persist(status) {
 .o-check { color: var(--accent); flex-shrink: 0; }
 .other-in { margin-top: 4px; }
 
-.list-items { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; }
-
-/* La lista scrollea dentro de su propio contenedor: no empuja el footer. */
-.list-scroll {
-  display: flex; flex-direction: column; gap: 10px;
-  max-height: min(46vh, 440px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  /* aire para que el foco/scrollbar no pegue al borde */
-  padding: 2px 4px 2px 2px;
-  margin: -2px -4px -2px -2px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-strong) transparent;
-}
-.list-scroll::-webkit-scrollbar { width: 8px; }
-.list-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
-.list-scroll::-webkit-scrollbar-track { background: transparent; }
-
+.list-items { margin-top: 32px; display: flex; flex-direction: column; gap: 10px; }
 .list-row { display: flex; align-items: flex-start; gap: 10px; }
 .li-bullet {
   width: 24px; height: 24px; flex-shrink: 0; margin-top: 11px;
@@ -602,7 +599,7 @@ async function persist(status) {
 .add-item { align-self: flex-start; margin-top: 2px; }
 
 /* Footer ------------------------------------------------------------------ */
-.wiz-foot { margin-top: 40px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.wiz-foot { flex-shrink: 0; margin-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .foot-right { display: flex; align-items: center; gap: 14px; }
 .enter-hint {
   font-size: 0.74rem; color: var(--text-faint);
@@ -642,9 +639,8 @@ async function persist(status) {
       radial-gradient(ellipse 140% 90% at 50% -10%, #0b0d10 0%, #070809 48%, #030304 100%);
   }
   .center { padding: 24px 20px; }
-  .wiz-inner { padding: 22px 20px 26px; }
-  .wiz-body { padding: 20px 0; }
-  .wiz-head { margin-bottom: 24px; }
+  .wiz-inner { padding: 22px 20px 22px; }
+  .wiz-head { margin-bottom: 22px; }
   .intro-logo { margin-bottom: 26px; }
   .intro-title { font-size: 2.05rem; }
   .intro-lead { font-size: 1rem; }
