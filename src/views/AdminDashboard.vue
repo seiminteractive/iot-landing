@@ -34,6 +34,9 @@
       </aside>
 
       <div class="admin-main">
+        <header class="admin-topbar">
+          <img src="@/assets/MARCA-14.png" alt="Seim Interactive" class="topbar-logo" />
+        </header>
         <RouterView />
       </div>
     </div>
@@ -163,24 +166,68 @@ async function logout() {
 
 .admin-main { flex: 1; min-width: 0; }
 
+/* Solo mobile: la marca sale del riel lateral y pasa a una barra superior. */
+.admin-topbar { display: none; }
+
 @media (max-width: 720px) {
-  .admin-shell { flex-direction: column; }
+  .admin-shell { display: block; }
   .admin-nav, .admin-nav.collapsed {
-    width: auto;
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    width: 100%;
     height: auto;
-    position: static;
     flex-direction: row;
     align-items: center;
+    border-top: 1px solid var(--border);
     border-right: 0;
-    border-bottom: 1px solid var(--border);
-    padding: 10px 12px;
-    gap: 8px;
+    padding: 7px 10px calc(7px + env(safe-area-inset-bottom));
+    gap: 2px;
+    background: rgba(13, 13, 15, 0.94);
+    backdrop-filter: blur(18px);
   }
   .collapse-btn { display: none; }
-  .nav-top { margin: 0 8px 0 0; }
-  .admin-links { flex-direction: row; flex: 1; }
-  .admin-link .link-label { display: none; }
-  .admin-link { padding: 10px; }
-  .admin-foot { border-top: 0; padding: 0; }
+  .nav-top { display: none; }
+  .admin-links { flex: 1; flex-direction: row; gap: 2px; }
+  .admin-link {
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    padding: 7px 3px;
+    border-radius: 10px;
+    font-size: 0.67rem;
+    line-height: 1.1;
+    text-align: center;
+  }
+  .admin-link .link-label,
+  .admin-nav.collapsed .link-label { display: block; opacity: 1; }
+  .admin-foot { display: flex; border-top: 0; padding: 0; }
+  .admin-foot .admin-link { width: 58px; flex: 0 0 58px; }
+
+  .admin-topbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    height: 52px;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(13, 13, 15, 0.94);
+    backdrop-filter: blur(18px);
+  }
+  .topbar-logo { height: 19px; width: auto; opacity: 0.95; }
+
+  .admin-main {
+    padding-top: 52px;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
 }
 </style>

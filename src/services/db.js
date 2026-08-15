@@ -158,3 +158,7 @@ export async function listResponses() {
 export async function updateResponseStatus(hash, status) {
   await updateDoc(doc(db, 'responses', hash), { status })
 }
+
+export async function deleteResponse(hash) {
+  await deleteDoc(doc(db, 'responses', hash))
+}

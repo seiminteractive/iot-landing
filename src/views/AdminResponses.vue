@@ -63,6 +63,10 @@
               <template #icon><component :is="copied === r.id ? Check : Copy" :size="15" /></template>
               {{ copied === r.id ? 'Copiado' : 'Copiar resumen' }}
             </UiButton>
+            <UiButton size="sm" variant="danger" @click="remove(r)">
+              <template #icon><Trash2 :size="15" /></template>
+              Borrar respuesta
+            </UiButton>
           </div>
         </div>
       </UiCard>
@@ -72,8 +76,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { Inbox, ChevronRight, RotateCw, Copy, Check } from 'lucide-vue-next'
-import { listResponses, listTemplates, updateResponseStatus } from '@/services/db'
+import { Inbox, ChevronRight, RotateCw, Copy, Check, Trash2 } from 'lucide-vue-next'
+import { listResponses, listTemplates, updateResponseStatus, deleteResponse } from '@/services/db'
 import { UiSelect, UiButton, UiCard, UiBadge, UiEmpty } from '@/components/console'
 
 const OTHER = '__other__'
@@ -133,6 +137,14 @@ function formatAnswer(step, val) {
 async function changeStatus(r, status) {
   await updateResponseStatus(r.id, status)
   r.status = status
+}
+
+async function remove(r) {
+  const name = r.clientName || 'este cliente'
+  if (!confirm(`¿Borrar la respuesta de "${name}"? Esta acción no se puede deshacer.`)) return
+  await deleteResponse(r.id)
+  responses.value = responses.value.filter((response) => response.id !== r.id)
+  if (open.value === r.id) open.value = null
 }
 
 async function copySummary(r) {
@@ -207,4 +219,17 @@ async function copySummary(r) {
 
 .small { font-size: 0.82rem; margin: 16px 0 8px; }
 .raw { background: var(--surface-2); border-radius: 10px; padding: 14px; font-size: 0.8rem; overflow-x: auto; margin: 0; }
+
+@media (max-width: 540px) {
+  .head-actions { gap: 8px; }
+  .filter { flex: 1; }
+  .filter :deep(.ui-select) { min-width: 0; width: 100%; }
+  .resp-head { gap: 10px; padding: 14px; }
+  .resp-avatar { width: 32px; height: 32px; }
+  .resp-meta { line-height: 1.35; }
+  .resp-body { padding: 6px 14px 16px; }
+  .resp-actions { align-items: stretch; flex-direction: column; margin-top: 20px; padding-top: 16px; }
+  .status-select :deep(.ui-select) { width: 100%; }
+  .status-ctrl { width: 100%; }
+}
 </style>

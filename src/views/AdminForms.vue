@@ -106,4 +106,16 @@ async function remove(t) {
 .form-row__meta { font-size: 0.82rem; color: var(--text-faint); }
 .form-row__actions { display: flex; gap: 4px; flex-shrink: 0; opacity: 0.75; transition: opacity 0.14s ease; }
 .form-row:hover .form-row__actions { opacity: 1; }
+
+@media (max-width: 540px) {
+  .form-row { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px; }
+  .form-row__name { font-size: 1rem; }
+  .form-row__actions {
+    width: 100%;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    opacity: 1;
+  }
+}
 </style>

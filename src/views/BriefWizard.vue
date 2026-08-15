@@ -298,7 +298,13 @@ async function persist(status) {
 </script>
 
 <style scoped>
-.wiz { position: relative; overflow: hidden; background: #050506; }
+.wiz {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #050506;
+}
 
 /* Fondo: rayos cónicos enmascarados + grano + viñeta ---------------------- */
 .wiz-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: #000; }
@@ -382,6 +388,7 @@ async function persist(status) {
 .center {
   position: relative; z-index: 1;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex; align-items: center; justify-content: center;
   padding: 24px;
 }
@@ -391,6 +398,7 @@ async function persist(status) {
   margin: 0 auto;
   padding: 40px 24px 60px;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex; flex-direction: column;
 }
 
@@ -528,15 +536,15 @@ async function persist(status) {
       #000;
   }
   .center { padding: 24px 20px; }
-  .wiz-inner { padding: 24px 20px 36px; }
-  .wiz-head { margin-bottom: 30px; }
+  .wiz-inner { padding: 20px 20px 24px; }
+  .wiz-head { margin-bottom: 24px; }
   .intro-logo { margin-bottom: 26px; }
   .intro-title { font-size: 2.05rem; }
   .intro-lead { font-size: 1rem; }
   .q-title { font-size: 1.45rem; }
-  .options { margin-top: 26px; }
-  .control, .list-items { margin-top: 26px; }
-  .wiz-foot { margin-top: 32px; }
+  .options { margin-top: 22px; }
+  .control, .list-items { margin-top: 22px; }
+  .wiz-foot { margin-top: 24px; }
   .enter-hint { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {

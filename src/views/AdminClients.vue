@@ -190,8 +190,20 @@ async function remove(c) {
 
 @media (max-width: 760px) {
   .new-grid { grid-template-columns: 1fr; }
-  .chead { display: none; }
-  .crow { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .cell-actions { grid-column: 1 / -1; justify-content: flex-start; }
+  .crow.chead { display: none; }
+  .crow {
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 10px;
+    padding: 16px;
+  }
+  .cell-name { grid-column: 1 / -1; font-size: 1rem; }
+  .cell-tpl { font-size: 0.85rem; }
+  .cell-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
 }
 </style>
