@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presupuesto — Alumit · Seim Interactive</title>
+<link rel="icon" href="assets/MARCA-14.png">
+<style>
+  :root {
+    --bg: #000000;
+    --text: #ffffff;
+    --accent-cyan: #AFE3E8;
+    --accent-green: #06f62e;
+    --text-08: rgba(255,255,255,0.8);
+    --text-06: rgba(255,255,255,0.6);
+    --text-04: rgba(255,255,255,0.4);
+    --text-025: rgba(255,255,255,0.25);
+    --border-sutil: rgba(255,255,255,0.08);
+    --border-medio: rgba(255,255,255,0.15);
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-weight: 300;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 100% 0%, rgba(175,227,232,0.07), transparent 55%),
+      radial-gradient(ellipse 60% 50% at 0% 100%, rgba(175,227,232,0.04), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .document {
+    position: relative;
+    z-index: 1;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 72px 60px 120px;
+  }
+
+  .label {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-04);
+  }
+
+  .separator {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    margin: 56px 0;
+    border: 0;
+  }
+
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 64px;
+  }
+
+  .logo { height: 28px; width: auto; opacity: 0.95; }
+
+  .doc-meta {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .doc-meta .doc-number,
+  .doc-meta .doc-date {
+    font-size: 0.85rem;
+    color: var(--text-06);
+    font-weight: 300;
+    outline: none;
+  }
+  .doc-meta .doc-number { color: var(--text); font-weight: 400; }
+
+  .client-block { margin-bottom: 56px; }
+
+  .client-name {
+    font-size: clamp(2.4rem, 5vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-top: 16px;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 60%, var(--accent-cyan) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    outline: none;
+  }
+
+  .client-contact {
+    font-size: 0.95rem;
+    color: var(--text-06);
+    font-weight: 300;
+    outline: none;
+  }
+
+  .fx-rate {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    padding: 10px 18px;
+    border: 1px solid var(--border-sutil);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+  }
+  .fx-rate .label { font-size: 0.6rem; }
+  .fx-rate .fx-text { font-size: 0.9rem; color: var(--text-08); font-weight: 300; }
+  .fx-rate .fx-input {
+    font-size: 0.9rem;
+    color: var(--text);
+    font-weight: 400;
+    outline: none;
+    border-bottom: 1px dashed var(--text-025);
+    padding: 0 2px;
+    min-width: 40px;
+    display: inline-block;
+  }
+  .fx-rate .fx-input:focus { border-bottom-color: var(--accent-cyan); }
+
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-green);
+    box-shadow: 0 0 8px var(--accent-green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+  }
+
+  .intro {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--text-08);
+    font-weight: 300;
+    max-width: 700px;
+    outline: none;
+  }
+  .intro p + p { margin-top: 18px; }
+
+  .section-head { margin-bottom: 32px; }
+  .section-title {
+    font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-top: 14px;
+    color: var(--text);
+  }
+  .section-sub {
+    font-size: 0.98rem;
+    color: var(--text-06);
+    font-weight: 300;
+    max-width: 640px;
+    margin-top: 12px;
+  }
+
+  /* ── Módulos ── */
+  .mod {
+    position: relative;
+    padding: 20px 28px;
+    border: 1px solid var(--border-sutil);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.015);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .mod::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+  }
+  .mod-top { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; }
+  .mod-num {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--accent-cyan);
+    min-width: 30px;
+  }
+  .mod-title {
+    font-size: 1.18rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .mod-desc {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--text-08);
+    font-weight: 300;
+    margin-left: 44px;
+    margin-bottom: 10px;
+  }
+  .mod-feats {
+    list-style: none;
+    margin-left: 44px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 24px;
+  }
+  .mod-feats li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--text-06);
+    font-weight: 300;
+  }
+  .mod-feats li::before {
+    content: "◇";
+    position: absolute;
+    left: 0; top: 1px;
+    color: var(--accent-cyan);
+    font-size: 0.7rem;
+  }
+
+  /* ── Inversión ── */
+  .invest-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .invest-card {
+    padding: 32px 30px;
+    border: 1px solid var(--border-medio);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(175,227,232,0.04), rgba(255,255,255,0.01));
+  }
+  .invest-card .label { margin-bottom: 14px; }
+  .invest-usd {
+    font-size: 2.4rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .invest-usd .period { font-size: 0.9rem; color: var(--text-04); font-weight: 300; letter-spacing: 0; margin-left: 4px; }
+  .invest-ars { font-size: 0.82rem; color: var(--text-04); font-weight: 300; margin-top: 8px; }
+  .invest-note { font-size: 0.85rem; color: var(--text-06); font-weight: 300; margin-top: 14px; line-height: 1.6; }
+
+  .pay-plan {
+    padding: 28px 30px;
+    border: 1px solid var(--border-sutil);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.015);
+    margin-bottom: 16px;
+  }
+  .pay-plan .label { margin-bottom: 20px; }
+  .pay-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-sutil);
+  }
+  .pay-row:last-child { border-bottom: 0; }
+  .pay-when { font-size: 0.92rem; color: var(--text-08); font-weight: 300; }
+  .pay-when small { display: block; font-size: 0.75rem; color: var(--text-04); margin-top: 2px; }
+  .pay-amount { font-size: 1.15rem; font-weight: 400; color: var(--text); letter-spacing: -0.01em; }
+
+  .includes {
+    padding: 28px 30px;
+    border: 1px solid var(--border-sutil);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.015);
+  }
+  .includes .label { margin-bottom: 16px; }
+  .includes ul { list-style: none; padding: 0; }
+  .includes li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-06);
+    font-weight: 300;
+  }
+  .includes li::before {
+    content: "◇";
+    position: absolute;
+    left: 0; top: 1px;
+    color: var(--accent-cyan);
+    font-size: 0.72rem;
+  }
+
+  .terms .label { margin-bottom: 18px; }
+  .terms ul { list-style: none; padding: 0; }
+  .terms li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-06);
+    font-weight: 300;
+  }
+  .terms li::before {
+    content: "◇";
+    position: absolute;
+    left: 0; top: 1px;
+    color: var(--accent-cyan);
+    font-size: 0.72rem;
+  }
+
+  .continued {
+    font-size: 0.7rem;
+    color: var(--text-04);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .doc-footer {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border-sutil);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--text-04);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .print-btn {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 100;
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-medio);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 16px rgba(0,0,0,0.4);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .print-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent-cyan); }
+
+  @media (max-width: 768px) {
+    .document { padding: 48px 24px 80px; }
+    .doc-header { flex-direction: column; gap: 32px; align-items: flex-start; }
+    .doc-meta { text-align: left; }
+    .mod-desc, .mod-feats { margin-left: 0; }
+    .mod-feats { grid-template-columns: 1fr; }
+    .invest-grid { grid-template-columns: 1fr; }
+    .doc-footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+    .print-btn { bottom: 16px; right: 16px; padding: 10px 16px; font-size: 0.8rem; }
+  }
+
+  /* ══════════════════════════════════════════════
+     IMPRESIÓN — una hoja por sección, aire por CSS.
+     · @page margin 0  => el negro llega al borde físico
+                          (full bleed), sin depender del
+                          diálogo de impresión.
+     · .page padding    => el aire de las 4 caras lo pone
+                          el CSS en cada hoja; no depende
+                          del margen del navegador.
+     · Cada .page = una hoja A4; el contenido de cada una
+       entra justo (4 / 5 / 5 módulos), sin desbordar.
+     IMPRESIÓN: en el diálogo, Márgenes = "Ninguno" y
+     destildar "Encabezados y pies de página".
+     ══════════════════════════════════════════════ */
+  @media print {
+    @page { size: A4; margin: 0; }
+    html, body {
+      background: var(--bg) !important;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact;
+    }
+    body::before { display: none; }
+    .print-btn { display: none; }
+    .document { padding: 0; max-width: 100%; margin: 0; }
+
+    .page {
+      padding: 13mm 14mm;
+      page-break-after: always;
+      break-after: page;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+    .continued { display: none; }
+
+    .separator { display: none; margin: 0; }
+    .doc-header { margin-bottom: 24px; }
+    .client-block { margin-bottom: 24px; }
+    /* El degradado recortado al texto se rompe en PDF (aparece
+       como barras blancas). En impresión, blanco sólido. */
+    .client-name {
+      background: none !important;
+      -webkit-text-fill-color: var(--text) !important;
+      color: var(--text) !important;
+    }
+    .section-head { margin-bottom: 16px; }
+    /* Forzar layout de escritorio en impresión (la hoja A4 mide
+       menos de 768px y dispararía la regla mobile de 1 columna). */
+    .mod-desc { margin-left: 44px; }
+    .mod-feats { margin-left: 44px; grid-template-columns: 1fr 1fr; }
+    /* Inversión: compactar para que las 3 piezas (tarjetas +
+       plan de pagos + incluye) entren en una sola hoja. */
+    .invest-grid { grid-template-columns: 1fr 1fr; margin-bottom: 12px; }
+    .invest-card { padding: 22px 26px; }
+    .invest-note { margin-top: 10px; }
+    .pay-plan { padding: 20px 26px; margin-bottom: 12px; }
+    .pay-plan .label { margin-bottom: 14px; }
+    .pay-row { padding: 9px 0; }
+    .includes { padding: 20px 26px; }
+    .includes .label { margin-bottom: 12px; }
+    .includes li { margin-bottom: 7px; }
+    .mod { margin-bottom: 12px; break-inside: avoid; page-break-inside: avoid; }
+    .invest-grid, .invest-card, .pay-plan, .includes, .terms {
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .doc-footer { margin-top: 28px; }
+    [contenteditable]:focus { outline: none !important; }
+    .fx-rate .fx-input { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="document">
+
+  <!-- ═════════ PÁGINA 1 · PORTADA + OBJETIVO ═════════ -->
+  <section class="page">
+
+    <header class="doc-header">
+      <img class="logo" src="assets/MARCA-14.png" alt="Seim Interactive">
+      <div class="doc-meta">
+        <span class="label">Presupuesto</span>
+        <span class="doc-number" contenteditable="true">N.º 2026-043</span>
+        <span class="doc-date" contenteditable="true">17 de agosto de 2026</span>
+      </div>
+    </header>
+
+    <section class="client-block">
+      <span class="label">Cliente</span>
+      <h1 class="client-name" contenteditable="true">Alumit</h1>
+      <p class="client-contact" contenteditable="true">Sistema de gestión de producción y trazabilidad</p>
+      <div class="fx-rate">
+        <span class="label">Tipo de cambio</span>
+        <span class="fx-text">USD 1 = ARS</span>
+        <span class="fx-input" contenteditable="true" data-fx>1515</span>
+        <span class="dot" title="Editable manualmente"></span>
+      </div>
+    </section>
+
+    <section class="intro">
+      <p contenteditable="true">Gracias por la confianza. A continuación presentamos la propuesta para el desarrollo de un sistema a medida que le permita a Alumit organizar cada pedido desde que ingresa hasta su entrega final, con trazabilidad completa, agenda de producción y control real de la capacidad del taller.</p>
+      <p contenteditable="true">El objetivo es pasar de una gestión basada en seguimiento manual a un sistema que anticipe los problemas: saber cuánto se puede producir, cuánto trabajo se puede comprometer sin sobrecargar la estructura, y asegurar que cada pedido se entregue dentro del plazo acordado con el cliente.</p>
+    </section>
+
+  </section>
+
+  <!-- ═════════ FUNCIONALIDADES · MÓDULOS 1–5 ═════════ -->
+  <section class="page">
+
+    <div class="section-head">
+      <span class="label">Alcance del sistema · Versión 1</span>
+      <h2 class="section-title">Funcionalidades incluidas</h2>
+      <p class="section-sub">El sistema se compone de los siguientes módulos, todos incluidos en esta primera versión.</p>
+    </div>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">01</span><span class="mod-title">Pedidos y Órdenes de Producción</span></div>
+      <p class="mod-desc">Registro de cada trabajo que ingresa y su conversión en orden de producción con su compromiso de entrega.</p>
+      <ul class="mod-feats">
+        <li>Alta de pedidos con cliente, descripción y fecha de compromiso</li>
+        <li>Generación de la orden de producción</li>
+        <li>Carga de la cotización del cliente al proyecto</li>
+        <li>Listado y búsqueda por cliente, estado y fecha</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">02</span><span class="mod-title">Agenda de Producción y Entregas</span></div>
+      <p class="mod-desc">Visión de todos los pedidos en el tiempo y sus fechas comprometidas con cada cliente.</p>
+      <ul class="mod-feats">
+        <li>Calendario de compromisos de entrega</li>
+        <li>Todos los pedidos activos a la vista</li>
+        <li>Fecha estimada realista por pedido</li>
+        <li>Impacto de cada nuevo pedido sobre los ya comprometidos</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">03</span><span class="mod-title">Capacidad Productiva</span></div>
+      <p class="mod-desc">Medición de la capacidad real del taller para saber cuánto trabajo se puede tomar sin sobrecargar la estructura.</p>
+      <ul class="mod-feats">
+        <li>Carga de la capacidad productiva semanal</li>
+        <li>Cálculo de cuánto trabajo aceptar sin atrasarse</li>
+        <li>Detección de sobrecarga de compromisos</li>
+        <li>Base para planificar el crecimiento</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">04</span><span class="mod-title">Trazabilidad Completa</span></div>
+      <p class="mod-desc">Estado de cada trabajo en tiempo real, etapa por etapa, hasta la entrega.</p>
+      <ul class="mod-feats">
+        <li>Seguimiento por etapas de producción</li>
+        <li>Tareas pendientes y completadas por pedido</li>
+        <li>Registro de avances cargado por producción</li>
+        <li>Qué falta para llegar a la entrega</li>
+      </ul>
+    </article>
+
+  </section>
+
+  <!-- ═════════ FUNCIONALIDADES · MÓDULOS 5–9 ═════════ -->
+  <section class="page">
+
+    <p class="continued">Alumit · Funcionalidades — continuación</p>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">05</span><span class="mod-title">Insumos y Materiales</span></div>
+      <p class="mod-desc">Qué materiales necesita cada pedido y en qué estado están.</p>
+      <ul class="mod-feats">
+        <li>Identificación de materiales por pedido</li>
+        <li>Estado: solicitado / recibido / pendiente</li>
+        <li>Disponibilidad y detección de faltantes</li>
+        <li>Vinculación de insumos a cada trabajo</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">06</span><span class="mod-title">Proveedores y Compras</span></div>
+      <p class="mod-desc">Gestión de proveedores, pedidos de compra y estado de cuenta de manejo interno.</p>
+      <ul class="mod-feats">
+        <li>Pedidos de compra y fecha estimada de recepción</li>
+        <li>Detección de faltantes y demoras</li>
+        <li>Estado de cuenta por proveedor (debe / a favor / vencido)</li>
+        <li>Historial de pedidos realizados a cada proveedor</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">07</span><span class="mod-title">Alertas y Anticipación</span></div>
+      <p class="mod-desc">Avisos automáticos antes de que un problema afecte una fecha de entrega.</p>
+      <ul class="mod-feats">
+        <li>Atrasos en producción o entregas</li>
+        <li>Faltantes de insumos y demoras de proveedores</li>
+        <li>Entregas próximas y tareas trabadas</li>
+        <li>Sobrecarga de producción o exceso de compromisos</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">08</span><span class="mod-title">Dashboard General</span></div>
+      <p class="mod-desc">Vista ejecutiva de la producción y los compromisos en un solo lugar.</p>
+      <ul class="mod-feats">
+        <li>Panorama de pedidos activos y su estado</li>
+        <li>Indicadores de producción y entregas</li>
+        <li>Información centralizada para decidir rápido</li>
+        <li>Acceso inmediato a lo que requiere atención</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">09</span><span class="mod-title">Usuarios y Roles</span></div>
+      <p class="mod-desc">Accesos diferenciados según el perfil de cada persona.</p>
+      <ul class="mod-feats">
+        <li>Perfiles de Administración, Dirección y Producción</li>
+        <li>Cada rol ve y opera lo que le corresponde</li>
+        <li>Producción accede a entregas y trabajos programados</li>
+        <li>Dirección con visión completa y reportes</li>
+      </ul>
+    </article>
+
+  </section>
+
+  <!-- ═════════ FUNCIONALIDADES · MÓDULOS 10–14 ═════════ -->
+  <section class="page">
+
+    <p class="continued">Alumit · Funcionalidades — continuación</p>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">10</span><span class="mod-title">Históricos de Costos</span></div>
+      <p class="mod-desc">Registro de costos y presupuestos de proveedores a lo largo del tiempo.</p>
+      <ul class="mod-feats">
+        <li>Historial de precios por proveedor y material</li>
+        <li>Evolución de costos en el tiempo</li>
+        <li>Base de datos para el análisis comparativo</li>
+        <li>Respaldo de presupuestos recibidos</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">11</span><span class="mod-title">Rentabilidad y Reportes</span></div>
+      <p class="mod-desc">Análisis del negocio con datos reales: tablero de indicadores, reportes y gráficos.</p>
+      <ul class="mod-feats">
+        <li>Rentabilidad y márgenes por trabajo y global</li>
+        <li>Tiempos de producción y cumplimiento de fechas</li>
+        <li>Productividad y capacidad del taller</li>
+        <li>Proyección de producción y ventas</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">12</span><span class="mod-title">Inteligencia Artificial — Proveedores</span></div>
+      <p class="mod-desc">Análisis y comparación de costos de proveedores para detectar oportunidades de ahorro.</p>
+      <ul class="mod-feats">
+        <li>Comparación de precios entre proveedores</li>
+        <li>Diferencias de precio y oportunidades de compra</li>
+        <li>Evolución de costos y posibles ahorros</li>
+        <li>Apoyo a la decisión para bajar costos</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">13</span><span class="mod-title">Notificaciones por WhatsApp</span></div>
+      <p class="mod-desc">Las alertas y recordatorios del sistema llegan también por WhatsApp.</p>
+      <ul class="mod-feats">
+        <li>Avisos de tareas pendientes y atrasos</li>
+        <li>Recordatorios de fechas de entrega</li>
+        <li>Notificaciones de pedidos y entregas de proveedores</li>
+        <li>Canal ya usado por el equipo, sin fricción</li>
+      </ul>
+    </article>
+
+    <article class="mod">
+      <div class="mod-top"><span class="mod-num">14</span><span class="mod-title">Extracción Automática de Documentos</span></div>
+      <p class="mod-desc">Lectura automática de los PDFs de Alumit para cargar datos sin tipeo manual.</p>
+      <ul class="mod-feats">
+        <li>Lectura de cotizaciones y documentos propios</li>
+        <li>Carga automática de materiales del pedido</li>
+        <li>Menos carga manual y menos errores</li>
+        <li>Alimenta insumos y trazabilidad</li>
+      </ul>
+    </article>
+
+  </section>
+
+  <!-- ═════════ INVERSIÓN ═════════ -->
+  <section class="page">
+
+    <div class="section-head">
+      <span class="label">Inversión</span>
+      <h2 class="section-title">Desarrollo y mantenimiento</h2>
+    </div>
+
+    <div class="invest-grid">
+      <div class="invest-card">
+        <span class="label">Desarrollo · pago único</span>
+        <div class="invest-usd">USD <span data-usd="17900">17.900</span></div>
+        <div class="invest-ars">ARS <span class="ars" data-usd="17900"></span></div>
+        <p class="invest-note">Sistema completo — los 14 módulos descriptos. Financiable en 4 meses.</p>
+      </div>
+      <div class="invest-card">
+        <span class="label">Mantenimiento mensual</span>
+        <div class="invest-usd">USD <span data-usd="220">220</span><span class="period"> /mes</span></div>
+        <div class="invest-ars">ARS <span class="ars" data-usd="220"></span> /mes</div>
+        <p class="invest-note">Arranca al segundo mes posterior a la entrega. El primer mes es de garantía, sin cargo.</p>
+      </div>
+    </div>
+
+    <div class="pay-plan">
+      <span class="label">Plan de pagos · desarrollo en 4 cuotas</span>
+      <div class="pay-row">
+        <span class="pay-when">Cuota 1 — al inicio del proyecto <small>Firma y arranque</small></span>
+        <span class="pay-amount">USD 4.475</span>
+      </div>
+      <div class="pay-row">
+        <span class="pay-when">Cuota 2 — mes 2 <small>Avance de desarrollo</small></span>
+        <span class="pay-amount">USD 4.475</span>
+      </div>
+      <div class="pay-row">
+        <span class="pay-when">Cuota 3 — mes 3 <small>Avance de desarrollo</small></span>
+        <span class="pay-amount">USD 4.475</span>
+      </div>
+      <div class="pay-row">
+        <span class="pay-when">Cuota 4 — contra entrega <small>Entrega final del sistema</small></span>
+        <span class="pay-amount">USD 4.475</span>
+      </div>
+    </div>
+
+    <div class="includes">
+      <span class="label">El mantenimiento mensual incluye</span>
+      <ul>
+        <li>Hosting del sistema en servidor propio (VPS) y copias de seguridad</li>
+        <li>Uso de inteligencia artificial para los análisis del sistema, hasta un volumen normal de uso</li>
+        <li>Soporte y atención de consultas del equipo</li>
+        <li>Cambios menores y ajustes sobre lo existente</li>
+        <li>Actualizaciones de seguridad y monitoreo del sistema</li>
+      </ul>
+    </div>
+
+  </section>
+
+  <!-- ═════════ TIEMPOS + TÉRMINOS ═════════ -->
+  <section class="page">
+
+    <div class="section-head">
+      <span class="label">Plazos y condiciones</span>
+      <h2 class="section-title">Tiempos y términos</h2>
+    </div>
+
+    <section class="terms">
+      <span class="label">Tiempo de desarrollo</span>
+      <ul>
+        <li>Estimado: 12 a 16 semanas, con desarrollo incremental y validaciones durante el proceso.</li>
+        <li>El plazo contempla instancias de revisión conjunta; los tiempos de validación por parte de Alumit inciden en la fecha final de entrega.</li>
+      </ul>
+    </section>
+
+    <hr class="separator">
+
+    <section class="terms">
+      <span class="label">Términos</span>
+      <ul>
+        <li>Validez del presupuesto: 15 días desde la fecha de emisión.</li>
+        <li>Forma de pago del desarrollo: 4 cuotas mensuales iguales de USD 4.475, la primera al inicio y la última contra entrega.</li>
+        <li>Mantenimiento mensual: comienza al segundo mes posterior a la entrega (primer mes de garantía sin cargo) y se factura por adelantado.</li>
+        <li>El mantenimiento cubre soporte y cambios menores; el desarrollo de nuevas funcionalidades o módulos se cotiza por separado.</li>
+        <li>Precios expresados en dólares estadounidenses (USD). La conversión a ARS se realiza al tipo de cambio del día de pago.</li>
+        <li>El alcance corresponde a la primera versión del sistema, según los módulos detallados en esta propuesta.</li>
+      </ul>
+    </section>
+
+    <footer class="doc-footer">
+      <span>Seim Interactive · Software studio</span>
+      <span>hello@seiminteractive.io</span>
+    </footer>
+
+  </section>
+
+</main>
+
+<button class="print-btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+
+<script>
+  (function () {
+    const STORAGE_KEY = 'seim_budget_fx_alumit';
+    const fxEl = document.querySelector('[data-fx]');
+
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) fxEl.textContent = saved;
+
+    const fmt = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 });
+
+    function parseNumber(text) {
+      const cleaned = String(text).replace(/[^\d]/g, '');
+      return parseInt(cleaned, 10) || 0;
+    }
+    function getFx() { return parseNumber(fxEl.textContent) || 1; }
+
+    function recalc() {
+      const fx = getFx();
+      document.querySelectorAll('.ars[data-usd]').forEach(el => {
+        el.textContent = fmt.format(parseNumber(el.dataset.usd) * fx);
+      });
+    }
+
+    document.addEventListener('input', (e) => {
+      if (e.target === fxEl) {
+        localStorage.setItem(STORAGE_KEY, fxEl.textContent.replace(/[^\d]/g, ''));
+        recalc();
+      }
+    });
+
+    recalc();
+  })();
+</script>
+
+</body>
+</html>
